@@ -1,0 +1,93 @@
+*{
+  margin:0;
+  padding: 0;
+}
+
+body{
+  background-image: url("https://static.vecteezy.com/system/resources/thumbnails/008/058/793/small/abstract-blur-with-bokeh-light-for-background-usage-vector.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.Page {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.card{
+  margin: auto;
+  width: 40%;
+  height : 500px;
+  text-align: center;
+  padding: 100px;
+  margin-top: 10%;
+}
+
+.Page h1 {
+  color: Blue;
+  text-align: center;
+}
+
+footer{
+  text-align: center;
+}
+
+.container{
+  display: grid;
+  grid-gap: 10px;
+  grid-template-areas: 
+  'header header header header'
+  'stream stream status status'
+  'output output output output';
+}
+
+.item {
+
+  background-color: darkcyan;
+  color: azure;
+  text-align: center;
+  align-content: center;
+  justify-content: space-around;
+
+}
+
+
+.header {
+  grid-area: header;
+  height: 100px;
+}
+
+.outputs {
+  grid-area: output;
+  height: 400px
+
+}
+
+.stream{
+  grid-area: stream;
+  height: 300px;
+
+}
+
+.status{
+  grid-area: status;
+  height: auto;
+}
+
+.UserPage{
+  text-align: center;
+}
+
+.welcomePage{
+  
+  text-align: center;
+}
+
+table ,th, td {
+  border: 1px solid black;
+}
+
+.landing{
+  text-align: center;
+}

@@ -1,0 +1,24 @@
+{
+  "name": "NestBackend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/NestBackend/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "NestBackend:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "NestBackend:build:development"
+        },
+        "production": {
+          "buildTarget": "NestBackend:build:production"
+        }
+      }
+    }
+  }
+}
