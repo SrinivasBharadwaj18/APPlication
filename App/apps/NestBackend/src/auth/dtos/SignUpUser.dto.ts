@@ -33,8 +33,3 @@ export class SignUpUserDto{
     age: number
     
 }
-
-
-// create this schema , this schema is used for signup, in the users model instead of Auth
-// login just takes username and password
-// 
