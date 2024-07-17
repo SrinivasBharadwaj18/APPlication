@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Auth, AuthSchema } from './schemas/auth.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/Jwt.strategy';
@@ -14,7 +13,7 @@ import { Roles, RolesSchema } from '../users/schemas/roles.schema';
 @Module({
   controllers: [AuthController],
   providers: [AuthService,JwtStrategy,LocalStrategy],
-  imports : [UsersModule,MongooseModule.forFeature([{name: Auth.name , schema: AuthSchema},{name: Roles.name,schema: RolesSchema}]),JwtModule.registerAsync({
+  imports : [UsersModule,MongooseModule.forFeature([{name: Roles.name,schema: RolesSchema}]),JwtModule.registerAsync({
     inject:[ConfigService],
     useFactory: ((config : ConfigService) =>{
       return{

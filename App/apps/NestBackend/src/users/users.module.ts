@@ -4,7 +4,6 @@ import { UsersService } from './users.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Users, UsersSchema } from './schemas/users.schema';
 
-// const cookieSession = require('cookie-session')
 
 @Module({
   controllers: [UsersController],
