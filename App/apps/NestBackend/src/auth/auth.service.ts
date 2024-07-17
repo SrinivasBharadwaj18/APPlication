@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { AnyObject, Model } from 'mongoose';
 import { SignUpUserDto } from './dtos/SignUpUser.dto';
@@ -28,39 +28,38 @@ export class AuthService {
         private RolesModel: Model<Roles>
     ){}
 
+    CheckRole(role: string):restrictedFeatures{
+        if(role === "basic user"){
+            const ResFeatures:restrictedFeatures = {
+                restrictedFeatures: ['test', 'create user']
+            }
+            return ResFeatures   
+        }
+        else if(role === "admin"){
+            const ResFeatures:restrictedFeatures = {
+                restrictedFeatures: []
+            }
+            return ResFeatures
+        }    
+
+    }
 
 
-    async Signup({role,...signupUser}: SignUpUserDto): Promise<Users>{   //i am just spreading the contents of the signup user 
+    async Signup({role,...signupUser}: SignUpUserDto): Promise<Users>{ 
         const {username,password}  = signupUser
         const user = await this.UsersModel.findOne({username})
         signupUser.password =await bcrypt.hash(password,10)
         if(user){
             throw new UnauthorizedException("user already present")
         }
-        if (role === "basic user"){
-            const ResFeatures:restrictedFeatures = {
-                restrictedFeatures: ['test', 'create user']
-            }            
-            const roles = new this.RolesModel(ResFeatures)// here iam adding the role to the db
-            const savedRoles = await roles.save()
-        
-            const createdUser = await this.UsersModel.create({...signupUser, role: savedRoles._id})// the user model needs to have roles in the collection 
-            await createdUser.save()
-            return createdUser
-        }
-        else if(role === "admin"){
-            const ResFeatures:restrictedFeatures = {
-                restrictedFeatures: []
-            }
+        const ResFeatures = this.CheckRole(role)  
+        const roles = new this.RolesModel(ResFeatures)
+        const savedRoles = await roles.save()
+    
+        const createdUser = await this.UsersModel.create({...signupUser, role: savedRoles._id})
+        await createdUser.save()
+        return createdUser
 
-            const roles = new this.RolesModel(ResFeatures)// here iam adding the role to the db
-            const savedRoles = await roles.save()
-        
-            const createdUser = await this.UsersModel.create({...signupUser, role: savedRoles._id})// the user model needs to have roles in the collection 
-            await createdUser.save()
-            return createdUser
-
-        }
 
     }
 
