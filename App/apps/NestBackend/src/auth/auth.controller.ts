@@ -35,7 +35,7 @@ export class AuthController {
     }
     
     @UseGuards(LocalGuard)
-    @Post('/login')     // this route returns a token.
+    @Post('/login')
     @UsePipes(ValidationPipe)
     async Login(@Body() LoginUser: LoginUserDto): Promise<{Token:string, userId:mongoose.Types.ObjectId}>{
         const token = await this.AuthService.login(LoginUser)
