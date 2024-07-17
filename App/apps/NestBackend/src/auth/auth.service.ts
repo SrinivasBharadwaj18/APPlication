@@ -63,25 +63,6 @@ export class AuthService {
         }
 
     }
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-    async validateGetToken(loginUser: {username:string, password: string}){
-        const { username, password } = loginUser
-        const user = await this.UsersModel.findOne({username})
-        if (!user){
-            throw new UnauthorizedException("signup first")
-        }
-        if(!password){
-            throw new BadRequestException("no password given")
-        }
-        const isPasswordMatched = await bcrypt.compare(password,user.password)
-        if(!isPasswordMatched){
-            throw new BadRequestException("invalid password")
-        }else{
-            const token = this.JwtService.sign({id:user._id})
-            return token
-        }
-
-    }
 
     async login(loginUser: LoginUserDto): Promise<{token: string}>{
         const { username } = loginUser

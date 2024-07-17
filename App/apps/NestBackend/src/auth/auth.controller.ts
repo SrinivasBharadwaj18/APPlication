@@ -17,7 +17,7 @@ export class AuthController {
         private AuthService : AuthService
     ){}
 
-
+    @UseGuards(JwtGuard)
     @Get('/users')
     async GetUsers():Promise<(mongoose.Document<unknown, AnyObject, Users> & Users & {
         _id: mongoose.Types.ObjectId;
