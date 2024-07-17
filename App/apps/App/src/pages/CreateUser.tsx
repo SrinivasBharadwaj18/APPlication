@@ -45,15 +45,7 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
   function handleClick(event: any): void {
     event.preventDefault();
     axios
-      .post(`${Base}auth/signup`, {
-        username: upstate.username,
-        firstname: upstate.firstname,
-        lastname: upstate.lastname,
-        emailid: upstate.emailid,
-        role: role,
-        password: upstate.password,
-        age: age,
-      })
+      .post(`${Base}auth/signup`, { username: upstate.username, firstname: upstate.firstname, lastname: upstate.lastname, emailid: upstate.emailid, role: role, password: upstate.password, age: age,})
       .then((res) => {
         dispatch(setSnack({ message: `${props.messageText} Successful`, severity: "success" }));
       })
@@ -75,7 +67,7 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
               <TextField required style={{ display: "block" }} key={index} name={field.name} placeholder={field.name} value={field.value} margin="dense" onChange={handleChange}/>
             ))}
 
-            <Input type="number" aria-label="Demo input" placeholder="age" name="age" value={age} onChange={handleChange}/>
+            <Input type= "number" aria-label="Demo input" placeholder="age" name="age" value={age} onChange={handleChange}/>
 
             <FormControl sx={{ m: 1, minWidth: 200 }}>
 

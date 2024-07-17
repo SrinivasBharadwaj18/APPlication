@@ -17,7 +17,7 @@ export default function UpdateUser(){
       
     })
 
-    const [age, setAge] = useState<number| string>()
+    const [age, setAge] = useState<number| string>("")
     const dispatch = useAppDispatch() 
 
 
@@ -26,7 +26,7 @@ export default function UpdateUser(){
 
 
 
-    const fieldNames = [
+    const fieldNames: { name: string; value: string;}[]  = [
       { name: "username", value: upstate.username},
       { name: "firstname", value: upstate.firstname},
       { name: "lastname", value: upstate.lastname},
@@ -78,7 +78,7 @@ export default function UpdateUser(){
                 {fieldNames.map((field ,index) => (
                     <TextField style={{display: "block"}} key={index} name={field.name} placeholder={field.name} value={field.value} id="margin-dense" margin="dense" onChange={handleChange}/>
                 ))}
-                <Input type = {"number"} aria-label="Demo input" placeholder="age" name="age" value={age}  onChange={handleChange} />
+                <Input type = "number" aria-label="Demo input" placeholder="age" name="age" value={age}  onChange={handleChange} />
                 <br />
                 <br />
                 <Button variant="contained" type="submit">Submit</Button>
