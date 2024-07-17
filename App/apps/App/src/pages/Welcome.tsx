@@ -14,7 +14,6 @@ type User = {
     lastname:string,
     role:string
     age:string
-
 }
 
 const Base = import.meta.env.VITE_BASE_URL

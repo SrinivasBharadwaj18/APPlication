@@ -20,7 +20,7 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
   const [age, setAge] = useState<number | string>("");
   const dispatch = useAppDispatch();
 
-  const fieldNames = [
+  const fieldNames: { name: string; value: string;}[] = [
     { name: "username", value: upstate.username },
     { name: "firstname", value: upstate.firstname },
     { name: "lastname", value: upstate.lastname },
@@ -67,42 +67,24 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
     <div className="Page">
       <div className="card">
         <header>
-          <h1>{props.title}</h1> {/* Correct usage of title prop */}
+          <h1>{props.title}</h1>
         </header>
         <div>
           <form onSubmit={handleClick}>
             {fieldNames.map((field, index) => (
-              <TextField
-                required
-                style={{ display: "block" }}
-                key={index}
-                name={field.name}
-                placeholder={field.name}
-                value={field.value}
-                margin="dense"
-                onChange={handleChange}
-              />
+              <TextField required style={{ display: "block" }} key={index} name={field.name} placeholder={field.name} value={field.value} margin="dense" onChange={handleChange}/>
             ))}
-            <Input
-              type="number"
-              aria-label="Demo input"
-              placeholder="age"
-              name="age"
-              value={age}
-              onChange={handleChange}
-            />
+
+            <Input type="number" aria-label="Demo input" placeholder="age" name="age" value={age} onChange={handleChange}/>
+
             <FormControl sx={{ m: 1, minWidth: 200 }}>
+
               <InputLabel id="demo-simple-select-autowidth-label">Role</InputLabel>
-              <Select
-                labelId="demo-simple-select-autowidth-label"
-                id="demo-simple-select-autowidth"
-                name="role" // Added name attribute
-                value={role}
-                onChange={handleChange}
-                label="Role"
-              >
+
+              <Select labelId="demo-simple-select-autowidth-label" id="demo-simple-select-autowidth" name="role" value={role} onChange={handleChange} label="Role">
                 <MenuItem value={props.RoleName}>{props.RoleName}</MenuItem>
               </Select>
+
             </FormControl>
             <br />
             <br />
