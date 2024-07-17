@@ -39,9 +39,7 @@ export function Welcome(){
                 dispatch(addRest({rest: restrictedFeatures}))
             }
         })
-        .catch((err)=>{
-            console.log(err)
-        })
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
     
@@ -58,9 +56,6 @@ export function Welcome(){
         .then((res)=>{
             setUsers(res.data)
             Deliver(true)
-        })
-        .catch((err)=>{
-            console.log(err)
         })
     }
 

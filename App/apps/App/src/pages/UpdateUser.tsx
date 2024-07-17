@@ -52,7 +52,6 @@ export default function UpdateUser(){
 
           })
           .catch((err) => {
-            console.error(err);
             dispatch(setSnack({message:"Updating Failed", severity:"error"}))
           });
           

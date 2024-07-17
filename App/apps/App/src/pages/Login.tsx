@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { setUser } from "../features/token/tokenSlice";
 import { useAppDispatch } from "../hooks";
 import TextField from '@mui/material/TextField';
@@ -12,14 +12,8 @@ const Base = import.meta.env.VITE_BASE_URL
 export default function Login(){
     const [name, setName] = useState("")
     const[password, setPassword] = useState("")
-    const[signedIn, setSignedIn] = useState("false")
     const navigate = useNavigate()
     const dispatch = useAppDispatch();
-
-
-    useEffect(()=>{
-        <Navigate to={'/Welcome'} />
-    },[signedIn])
 
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>){
@@ -37,7 +31,6 @@ export default function Login(){
             password: password
         })
         .then((res)=>{
-            setSignedIn("true")
             dispatch(setUser({token:res.data.Token, userid: res.data.userId}))
             dispatch(setSnack({message:"Logged In", severity: "success"}))
             dispatch(login())
@@ -45,13 +38,10 @@ export default function Login(){
             
         })
         .catch((err)=>{
-            console.log(err)
             dispatch(setSnack({message:"Logging In Failed", severity:"error"}))
         })
            
     }
-
-
 
     return(
         <div className="Page">

@@ -50,7 +50,6 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
         dispatch(setSnack({ message: `${props.messageText} Successful`, severity: "success" }));
       })
       .catch((err) => {
-        console.log(err);
         dispatch(setSnack({ message: `${props.messageText} Failed`, severity: "error" }));
       });
   }
