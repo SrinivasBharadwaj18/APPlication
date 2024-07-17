@@ -5,7 +5,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 export class Roles{
 
     @Prop()
-    restrictedFeatures: [string] | undefined
+    restrictedFeatures: string[] | undefined
 }
 
 export const RolesSchema = SchemaFactory.createForClass(Roles)

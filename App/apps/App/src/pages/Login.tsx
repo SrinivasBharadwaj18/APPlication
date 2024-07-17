@@ -23,7 +23,7 @@ export default function Login(){
 
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>){
-        if(event.target.name === "username"){
+        if(event.target.name === "username"){ 
             setName(event.target.value)
         }
         else if(event.target.name === "password"){
