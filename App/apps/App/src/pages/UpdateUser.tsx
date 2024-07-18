@@ -24,8 +24,6 @@ export default function UpdateUser(){
     const token = useAppSelector((state)=> state.user.token)
     const userId = useAppSelector((state) => state.user.userid)
 
-
-
     const fieldNames: { name: string; value: string;}[]  = [
       { name: "username", value: upstate.username},
       { name: "firstname", value: upstate.firstname},
@@ -47,11 +45,11 @@ export default function UpdateUser(){
               }
             },
           )
-          .then((res) => {
+          .then(() => {
             dispatch(setSnack({message:'Updated Successfully', severity: 'success'}))
 
           })
-          .catch((err) => {
+          .catch(() => {
             dispatch(setSnack({message:"Updating Failed", severity:"error"}))
           });
           

@@ -6,7 +6,7 @@ import { reset } from "../features/token/roleSlice";
 
 export default function Links(){
 
-  const rest = useAppSelector((state)=>state.rest.restricted)
+  const rest = Selector((state)=>state.rest.restricted)
   const loggedIn = useAppSelector((state)=> state.log.login)
   const dispatch = useAppDispatch()
 
