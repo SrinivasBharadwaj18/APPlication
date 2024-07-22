@@ -4,22 +4,12 @@ import { Link } from "react-router-dom"
 import { useEffect, useState } from "react"
 import Button from '@mui/material/Button'
 import { addRest } from "../features/token/roleSlice"
-
-
-type User = {
-    _id:string,
-    username:string,
-    emailid:string,
-    firstname:string,
-    lastname:string,
-    role:string
-    age:string
-}
+import {User} from "../helpers/types"
 
 const Base = import.meta.env.VITE_BASE_URL
 export function Welcome(){
 
-    const [restricted, setRestricted] = useState(false)
+    const [restricted, setRestricted] = useState<boolean>(false)
     const token = useAppSelector((state)=> state.user.token)
     const userId = useAppSelector((state)=> state.user.userid)
     const dispatch = useAppDispatch()
@@ -40,7 +30,6 @@ export function Welcome(){
             }
         })
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
     
     const [ask,Deliver] = useState(false)

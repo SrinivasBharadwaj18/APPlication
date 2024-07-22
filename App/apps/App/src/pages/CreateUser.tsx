@@ -5,10 +5,10 @@ import Button from '@mui/material/Button';
 import { useAppDispatch } from "../hooks";
 import { setSnack } from "../features/token/snackSlice";
 import { FormControl, Input, InputLabel, MenuItem, Select } from "@mui/material";
+import {Form} from '../helpers/types'
 
-const Base = import.meta.env.VITE_BASE_URL
 export default function SignUp(props: { messageText: string; RoleName: string; title: string }) {
-  const [upstate, setUpState] = useState({
+  const [upstate, setUpState] = useState<Form>({
     username: "",
     password: "",
     firstname: "",
@@ -16,17 +16,18 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
     emailid: "",
   });
 
-  const [role, setRole] = useState(props.RoleName);
+  const [role, setRole] = useState<string>(props.RoleName);
   const [age, setAge] = useState<number | string>("");
   const dispatch = useAppDispatch();
+  const BASE_API_URL = import.meta.env.VITE_BASE_URL
 
-  const fieldNames: { name: string; value: string;}[] = [
-    { name: "username", value: upstate.username },
-    { name: "firstname", value: upstate.firstname },
-    { name: "lastname", value: upstate.lastname },
-    { name: "emailid", value: upstate.emailid },
-    { name: "password", value: upstate.password },
-  ];
+  const fieldNames: { name: string; value: string;}[]  = [
+    { name: "username", value: upstate.username},
+    { name: "firstname", value: upstate.firstname},
+    { name: "lastname", value: upstate.lastname},
+    { name: "emailid", value: upstate.emailid},
+    { name: "password", value: upstate.password},
+];
 
   function handleChange(event: any): void {
     const { name, value } = event.target;
@@ -45,11 +46,11 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
   function handleClick(event: any): void {
     event.preventDefault();
     axios
-      .post(`${Base}auth/signup`, { username: upstate.username, firstname: upstate.firstname, lastname: upstate.lastname, emailid: upstate.emailid, role: role, password: upstate.password, age: age,})
-      .then((res) => {
+      .post(`${BASE_API_URL}auth/signup`, { username: upstate.username, firstname: upstate.firstname, lastname: upstate.lastname, emailid: upstate.emailid, role: role, password: upstate.password, age: age,})
+      .then(() => {
         dispatch(setSnack({ message: `${props.messageText} Successful`, severity: "success" }));
       })
-      .catch((err) => {
+      .catch(() => {
         dispatch(setSnack({ message: `${props.messageText} Failed`, severity: "error" }));
       });
   }

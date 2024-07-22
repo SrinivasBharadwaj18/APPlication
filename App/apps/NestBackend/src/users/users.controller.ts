@@ -16,26 +16,26 @@ export class UsersController {
     @UseGuards(JwtGuard)
     @Get()
     GetAllUsers(){
-        return this.UsersService.GetAllUsers()
+        return this.UsersService.getAllUsers()
     }
     
     @UseGuards(JwtGuard)
     @Post()
     async CreateUser(@Body() createUser :  CreateUserDto):Promise<Users>{
-        const user = await this.UsersService.CreateUser(createUser)
+        const user = await this.UsersService.createUser(createUser)
         return user
     }
     
     @Get(':id')
     async GetUserById(@Param('id') id: string): Promise<Users> {
-      const user = await this.UsersService.GetUserById(id)
+      const user = await this.UsersService.getUserById(id)
       return user;
     }
     
     @UseGuards(JwtGuard)
     @Patch("/update")
     async UpdateUserById(@Session() session :{userId: string}, @Body() updateUser : UpdateUserDto):Promise<Users>{
-        return await this.UsersService.UpdateUserById(session.userId, updateUser)
+        return await this.UsersService.updateUserById(session.userId, updateUser)
     }
 
     

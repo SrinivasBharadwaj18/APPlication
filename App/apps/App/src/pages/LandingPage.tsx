@@ -5,8 +5,8 @@ import SignUp from "./CreateUser";
 
 export function LandingPage(){
 
-    const [choice, wantSignUp] = useState(false)
-    const [option, wantLogin] = useState(false)
+    const [choice, wantSignUp] = useState<boolean>(false)
+    const [option, wantLogin] = useState<boolean>(false)
     function getSignup(){
         wantSignUp(true)
         wantLogin(true)

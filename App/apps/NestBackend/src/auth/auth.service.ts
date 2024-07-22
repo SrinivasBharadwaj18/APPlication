@@ -28,7 +28,7 @@ export class AuthService {
         private RolesModel: Model<Roles>
     ){}
 
-    CheckRole(role: string):restrictedFeatures{
+    checkRole(role: string):restrictedFeatures{
         if(role === "basic user"){
             const ResFeatures:restrictedFeatures = {
                 restrictedFeatures: ['test', 'create user']
@@ -45,14 +45,14 @@ export class AuthService {
     }
 
 
-    async Signup({role,...signupUser}: SignUpUserDto): Promise<Users>{ 
+    async signup({role,...signupUser}: SignUpUserDto): Promise<Users>{ 
         const {username,password}  = signupUser
         const user = await this.UsersModel.findOne({username})
         signupUser.password =await bcrypt.hash(password,10)
         if(user){
             throw new UnauthorizedException("user already present")
         }
-        const ResFeatures = this.CheckRole(role)  
+        const ResFeatures = this.checkRole(role)  
         const roles = new this.RolesModel(ResFeatures)
         const savedRoles = await roles.save()
     
@@ -75,7 +75,7 @@ export class AuthService {
         return user
     }
 
-    async ValidateUser(username : string, password: string):Promise<Users>{
+    async validateUser(username : string, password: string):Promise<Users>{
         const user = await this.UsersModel.findOne({username})
         if (!user){
             throw new UnauthorizedException("signup first")
@@ -93,7 +93,7 @@ export class AuthService {
     }
 
 
-    async UpdateUser(id: string, UpdateUser: UpdateUserDto){
+    async updateUser(id: string, UpdateUser: UpdateUserDto){
         const validate = mongoose.Types.ObjectId.isValid(id)
 
         if(!validate){
@@ -113,7 +113,7 @@ export class AuthService {
 
     }
 
-    async GetAllUsers(): Promise<(mongoose.Document<unknown, AnyObject, Users> & Users & {
+    async getAllUsers(): Promise<(mongoose.Document<unknown, AnyObject, Users> & Users & {
         _id: mongoose.Types.ObjectId;
     })[]>{
         return this.UsersModel.find()

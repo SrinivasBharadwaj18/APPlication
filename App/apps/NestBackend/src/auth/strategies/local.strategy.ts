@@ -16,7 +16,7 @@ export class LocalStrategy extends PassportStrategy(Strategy){
         if(!username || !password){
             throw new UnauthorizedException("missing username or password")
         }
-        const user = this.AuthService.ValidateUser(username, password)
+        const user = this.AuthService.validateUser(username, password)
         return user
     }
 

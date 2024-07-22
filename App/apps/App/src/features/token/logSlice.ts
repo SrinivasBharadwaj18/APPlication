@@ -9,8 +9,8 @@ const initialState: logState ={
 
 }
 
-export const logSlice = createSlice({
-    name: 'log',
+export const loginSlice = createSlice({
+    name: 'login',
     initialState,
     reducers:{
 
@@ -24,8 +24,8 @@ export const logSlice = createSlice({
     }
 })
 
-export const {login, logout} = logSlice.actions
-export default logSlice.reducer
+export const {login, logout} = loginSlice.actions
+export default loginSlice.reducer
 
 
 

@@ -14,18 +14,18 @@ export class UsersService {
 
 
 
-    GetAllUsers(): Promise<Users[]>{
+    getAllUsers(): Promise<Users[]>{
         const users = this.UsersModel.find()
         return users
 
     }
 
-    async GetUserById(id: string): Promise<Users> {
+    async getUserById(id: string): Promise<Users> {
         const user = (await this.UsersModel.findById(id).exec()).populate('role');
         return user;
       }
 
-    CreateUser(user: CreateUserDto): Promise<Users> {
+    createUser(user: CreateUserDto): Promise<Users> {
         const User = this.UsersModel.create(user)
         return User
 
@@ -33,7 +33,7 @@ export class UsersService {
 
 
 
-    UpdateUserById(id: string , updateuser: UpdateUserDto): Promise<Users> | undefined{
+    updateUserById(id: string , updateuser: UpdateUserDto): Promise<Users> | undefined{
         const user = this.UsersModel.findByIdAndUpdate(id,updateuser)
         return user
     }

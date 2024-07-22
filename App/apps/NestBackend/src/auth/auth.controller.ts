@@ -22,7 +22,7 @@ export class AuthController {
     async GetUsers():Promise<(mongoose.Document<unknown, AnyObject, Users> & Users & {
         _id: mongoose.Types.ObjectId;
     })[]>{
-        return this.AuthService.GetAllUsers()
+        return this.AuthService.getAllUsers()
 
     }
     
@@ -30,7 +30,7 @@ export class AuthController {
     @UsePipes(ValidationPipe)
     @UseInterceptors(SignupInterceptor)
     async Signup(@Body() signupUser: SignUpUserDto):Promise<Users>{
-        return this.AuthService.Signup(signupUser)
+        return this.AuthService.signup(signupUser)
 
     }
     
@@ -54,7 +54,7 @@ export class AuthController {
     @UsePipes(ValidationPipe)
     @Patch("/update")
     async Update(@Body() UpdateUser: UpdateUserDto, @Headers('userid') userid: string ){
-        return this.AuthService.UpdateUser(userid,UpdateUser)
+        return this.AuthService.updateUser(userid,UpdateUser)
     }
 }
 

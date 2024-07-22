@@ -8,12 +8,13 @@ import Button from '@mui/material/Button';
 import { setSnack } from "../features/token/snackSlice";
 import { login } from "../features/token/logSlice";
 
-const Base = import.meta.env.VITE_BASE_URL
 export default function Login(){
-    const [name, setName] = useState("")
-    const[password, setPassword] = useState("")
+    const [name, setName] = useState<string>("")
+    const[password, setPassword] = useState<string>("")
     const navigate = useNavigate()
     const dispatch = useAppDispatch();
+    const BASE_API_URL = import.meta.env.VITE_BASE_URL
+
 
 
     function handleChange(event: React.ChangeEvent<HTMLInputElement>){
@@ -26,7 +27,7 @@ export default function Login(){
     }
     function handleClick(event:any):void{
         event.preventDefault();
-        axios.post(`${Base}auth/login`,{
+        axios.post(`${BASE_API_URL}auth/login`,{
             username: name,
             password: password
         })
@@ -37,7 +38,7 @@ export default function Login(){
             navigate("/Welcome")      
             
         })
-        .catch((err)=>{
+        .catch(()=>{
             dispatch(setSnack({message:"Logging In Failed", severity:"error"}))
         })
            
