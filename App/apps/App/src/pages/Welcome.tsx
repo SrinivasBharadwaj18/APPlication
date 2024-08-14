@@ -23,6 +23,7 @@ export function Welcome(){
     
         )
         .then((res)=>{
+            console.log(res)
             const restrictedFeatures = res.data.role.restrictedFeatures
             if (restrictedFeatures.includes('test')){
                 setRestricted(true)
@@ -85,6 +86,8 @@ export function Welcome(){
         <>
         <div className="welcomePage">
             <h1>Welcome</h1>
+            <Button variant="contained"><Link style={{textDecoration:'none', color: "white"}} to="uploadFile">UploadFile</Link></Button>
+            <Button variant="contained"><Link style={{textDecoration:'none', color: "white"}} to="chatBot">ChatBot</Link></Button>
             <Button variant="contained" onClick={handleClick}>users</Button>
             <Button variant="contained"><Link style={{textDecoration:'none', color: "white"}} to="UpdateUser">UpdateUser</Link></Button>
             {!restricted && <Button style={{color:"white"}}  variant="contained"><Link style={{textDecoration:'none' , color: "white"}} to="CreateUser">CreateUser</Link></Button>}

@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
     snack: snackReducer,
     user: userReducer,
     rest: restReducer,
-    log: logReducer
+    log: logReducer,
   });
 
   const persistedReducer = persistReducer(persistConfig, rootReducer)
@@ -27,9 +27,9 @@ const rootReducer = combineReducers({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
       serializableCheck:{
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE']
+        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE','persist/PURGE']
       }
-    }),
+    })
   });
 
   export const persistor = persistStore(store)

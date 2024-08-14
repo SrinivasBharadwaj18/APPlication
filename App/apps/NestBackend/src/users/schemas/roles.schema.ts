@@ -5,6 +5,9 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 export class Roles{
 
     @Prop()
+    rolename: string
+
+    @Prop()
     restrictedFeatures: string[] | undefined
 }
 

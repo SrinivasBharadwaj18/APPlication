@@ -15,8 +15,6 @@ export default function Login(){
     const dispatch = useAppDispatch();
     const BASE_API_URL = import.meta.env.VITE_BASE_URL
 
-
-
     function handleChange(event: React.ChangeEvent<HTMLInputElement>){
         if(event.target.name === "username"){ 
             setName(event.target.value)

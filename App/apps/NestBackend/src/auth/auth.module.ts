@@ -9,11 +9,12 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { UsersModule } from '../users/users.module';
 import { Users, UsersSchema } from '../users/schemas/users.schema';
 import { Roles, RolesSchema } from '../users/schemas/roles.schema';
+import { Chat, ChatSchema } from './schemas/chat.schema';
 
 @Module({
   controllers: [AuthController],
   providers: [AuthService,JwtStrategy,LocalStrategy],
-  imports : [UsersModule,MongooseModule.forFeature([{name: Roles.name,schema: RolesSchema}]),JwtModule.registerAsync({
+  imports : [UsersModule,MongooseModule.forFeature([{name: Roles.name,schema: RolesSchema},{name: Chat.name, schema: ChatSchema}]),JwtModule.registerAsync({
     inject:[ConfigService],
     useFactory: ((config : ConfigService) =>{
       return{

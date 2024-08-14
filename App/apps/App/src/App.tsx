@@ -10,6 +10,8 @@ import { ProtectedRotes } from "./utils/ProtectedRotes";
 import { AdminRoutes } from "./utils/AdminRoutes";
 import { NoAccess } from "./pages/NoAccess";
 import SignUP from "./pages/CreateUser";
+import FileUploadpage from "./pages/FileUpload";
+import ChatBot from "./pages/bot";
 
 
 export default function App(){
@@ -23,6 +25,8 @@ export default function App(){
         <Route element={<ProtectedRotes />}>
           <Route path="/Welcome" element={<Welcome />} />
           <Route path="/Test" element={<Test />} />
+          <Route path="/Welcome/uploadFile" element={<FileUploadpage />} />
+          <Route path="/Welcome/chatBot" element={<ChatBot />} />
           <Route path='/Welcome/UpdateUser' element = {<UpdateUser />}/>
           <Route element = {<AdminRoutes />} >
           <Route path='/Welcome/CreateUser' element = {<SignUP messageText="creating user" RoleName="admin" title="Create User" />} />

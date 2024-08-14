@@ -22,6 +22,7 @@ export class UsersService {
 
     async getUserById(id: string): Promise<Users> {
         const user = (await this.UsersModel.findById(id).exec()).populate('role');
+        console.log("user:", user)
         return user;
       }
 

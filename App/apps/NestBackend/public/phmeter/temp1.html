@@ -1,0 +1,135 @@
+<!-- calibration_report_template.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pH Meter Calibration Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .header {
+            font-weight: bold;
+        }
+        .section-title {
+            margin-top: 20px;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .details-table td {
+            padding: 5px;
+        }
+        .details-table .label {
+            font-weight: bold;
+            width: 20%;
+        }
+        .calibration-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .calibration-table th, .calibration-table td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left;
+        }
+        .footer {
+            margin-top: 30px;
+        }
+        .footer td {
+            padding: 5px;
+        }
+        .signature-block {
+            margin-top: 20px;
+        }
+        .signature-block td {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>pH Meter Calibration Report</h1>
+    
+    <table class="details-table">
+        <tr>
+            <td class="label">Device No:</td>
+            <td>{{deviceNo}}</td>
+            <td class="label">Conducted by:</td>
+            <td>{{conductedBy}}</td>
+        </tr>
+        <tr>
+            <td class="label">Date:</td>
+            <td>{{date}}</td>
+            <td class="label">Start Time:</td>
+            <td>{{startTime}}</td>
+        </tr>
+        <tr>
+            <td class="label">Completion Time:</td>
+            <td>{{completionTime}}</td>
+            <td class="label">Date of last calibration:</td>
+            <td>{{lastCalibrationDate}}</td>
+        </tr>
+        <tr>
+            <td class="label">Due date:</td>
+            <td>{{dueDate}}</td>
+        </tr>
+    </table>
+
+    <p class="section-title">Reason for discrepancy (in case the due date and date of calibration do not match):</p>
+    <p>{{discrepancyReason}}</p>
+
+    <p class="section-title">Calibration Details:</p>
+    <table class="calibration-table">
+        <thead>
+            <tr>
+                <th>Initial Reading</th>
+                <th>Acceptance Criteria</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>pH 7</td>
+                <td>{{ph7}}</td>
+            </tr>
+            <tr>
+                <td>pH 4</td>
+                <td>{{ph4}}</td>
+            </tr>
+            <tr>
+                <td>pH 10</td>
+                <td>{{ph10}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p class="section-title">Calibration Status:</p>
+    <p>{{calibrationStatus}}</p>
+
+    <table class="footer">
+        <tr>
+            <td class="label">Prepared by:</td>
+            <td>{{preparedBy}}</td>
+        </tr>
+        <tr>
+            <td class="label">Signature:</td>
+            <td>{{signature}}</td>
+        </tr>
+        <tr>
+            <td class="label">Name & ID:</td>
+            <td>{{name}} {{id}}</td>
+        </tr>
+        <tr>
+            <td class="label">Date:</td>
+            <td>{{preparedDate}}</td>
+        </tr>
+    </table>
+</body>
+</html>

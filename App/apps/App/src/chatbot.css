@@ -1,0 +1,95 @@
+.App{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .wrapper{
+    width: 100%;
+    max-width: 500px;
+    padding: 30px 15px;
+    background: #fdfdfe;
+    border-radius: 20px;
+    box-shadow: 0 4px 4px rgba(0,0,0,0.4);
+  }
+
+  .main{
+    margin: 30px 0 0;
+  }
+ .messages{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    overflow-y: auto;
+    min-height: 150px;
+    max-height: 400px;
+  }
+
+  .bot-message{
+    width: 40%;
+    padding: 15px;
+    text-align: center;
+    background: #EDECED;
+    font-style: 1.1em;
+    border-radius: 10px;
+    margin: 0 10px 0;
+    align-self: flex-start;
+  }
+  .bot-time{
+    align-self: flex-start;
+    margin-left: 15px;
+    opacity: 0.5;
+  }
+  .human-message{
+    width: 40%;
+    padding: 15px;
+    text-align: center;
+    background: #363062;
+    color: #EDECED;
+    font-style: 1.1em;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    align-self: flex-end;
+  }
+  .human-time{
+    align-self: flex-end;
+    margin-right: 15px;
+    opacity: 0.5;
+  }
+  .bottom{
+    margin: 20px 0 0;
+    bottom: 0;
+  }
+  .btm{
+    display: flex;
+    align-items: center;
+  }
+  input{
+    width: 350px;
+    height: 58px;
+    padding-left: 36px;
+    outline: none;
+    border: none;
+    background: #EDECED;
+    box-sizing: border-box;
+    border-radius: 5px;
+  }
+button{
+    width: 90px;
+    height: 50px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    background: #363062;
+    color: #FFF;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1.1em;
+  }
+i{
+    margin-left: 5px;
+  }
+
+
+

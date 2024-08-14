@@ -1,0 +1,23 @@
+[
+    {
+        "action": "add",
+        "target": "Flask 200ml 1",
+        "parameter": "Water",
+        "quantity": {
+            "value": 10,
+            "unit": "ml"
+        }
+    },
+    {
+        "action": "add",
+        "target": "Flask 200ml 1",
+        "parameter": "Salt",
+        "quantity": {
+            "value": 4,
+            "unit": "g"
+        },
+        "option": {
+            "mix": true
+        }
+    }
+]
