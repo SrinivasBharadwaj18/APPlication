@@ -8,18 +8,6 @@ import { JwtService } from '@nestjs/jwt';
 import { UpdateUserDto } from '../users/dtos/UpdateUser.dto';
 import { Users } from '../users/schemas/users.schema';
 import { Roles } from '../users/schemas/roles.schema';
-import * as fs from 'fs'
-import { promisify } from 'util';
-import { Chat } from './schemas/chat.schema';
-import { BotDto } from './dtos/bot.dto';
-import PizZip from "pizzip";
-import Docxtemplater from "docxtemplater";
-import { DocxDto } from './dtos/docx.dto';
-import WordExtractor from "word-extractor"; 
-import pdf from 'pdf-creator-node';
-
-const readFile = promisify(fs.readFile)
-const writeFile = promisify(fs.writeFile)
 
 interface restrictedFeatures{
 
@@ -36,8 +24,6 @@ export class AuthService {
         private UsersModel: Model<Users>,
         @InjectModel(Roles.name)
         private RolesModel: Model<Roles>,
-        @InjectModel(Chat.name)
-        private ChatModel: Model<Chat>
     ){}
 
     checkRole(role: string):restrictedFeatures{
@@ -83,19 +69,6 @@ export class AuthService {
         return createdUser
     }
 
-
-
-
-    async getData(fileName: string, body:any){
-        const FOLDER_NAME = '././apps/NestBackend/public'
-        const actions:string = await readFile(`${FOLDER_NAME}/ ${fileName}`,'utf-8')
-        const data:string = await readFile('././apps/NestBackend/public/data.json','utf-8')
-        const myArr:unknown = JSON.parse(data)
-        const actionArr:unknown = JSON.parse(actions)
-        myArr["actions"] = actionArr
-        const resData:string = JSON.stringify(myArr)
-        await writeFile('././apps/NestBackend/public/data.json',resData,'utf-8')
-    }
 
 
     async login(loginUser: LoginUserDto): Promise<{token: string}>{
@@ -153,111 +126,6 @@ export class AuthService {
         const users = await this.UsersModel.find()
         console.log(users)
         return this.UsersModel.find()
-    }
-
-    async getBotMessage(info:BotDto){
-        const {message , id, source, timestamp} = info
-        const findId = await this.ChatModel.findOne({userId: id})
-        const livechat = [{source, timestamp, message}]
-        const chat = livechat[0] 
-        const userID = new mongoose.Types.ObjectId(id)
-        if (!findId){
-            const chatLog = await this.ChatModel.create({livechat:livechat,userId:userID})
-            console.log("created chat: ",chatLog)
-            return message
-        }
-        else{
-            const chatlog = await this.ChatModel.findOneAndUpdate({userId: id},{$push: {livechat:chat}},{new:true})   
-            console.log("updated chat: ",chatlog)
-            return message
-        } 
-
-    }
-
-    async saveFile(){
-        const document = await this.ChatModel.find()
-        document.map((userlog)=>{
-            const {_id, livechat} = userlog
-            const currentDate = new Date().toDateString()
-
-            const chatLog = {[currentDate]:livechat}
-            const file=JSON.stringify(chatLog)
-            writeFile(`././apps/NestBackend/public/${_id}.json`,file,'utf-8')
-        })
-    }
-
-    async writeWord(body: DocxDto){
-        const extractor = new WordExtractor();
-        const extracted = await extractor.extract(`././apps/NestBackend/public/Sample_template.docx`);
-        const wordText:string = extracted.getBody()
-        const regex = /\{([^}]+)\}/g;
-        let match:RegExpExecArray;
-        const wordsArray:string[]= [];
-      
-        while ((match = regex.exec(wordText)) !== null) {
-          wordsArray.push(match[1]);
-        }
-        const template = fs.readFileSync(`././apps/NestBackend/public/Sample_template.docx`)
-        const zip = new PizZip(template) 
-        const doc = new Docxtemplater(zip,{
-            paragraphLoop: true,
-            linebreaks: true,
-        })
-
-        const fieldObj:{[key:string]:string} = {}
-        wordsArray.forEach((field) =>{
-            fieldObj[field] = body[field]
-        })
-        doc.render(fieldObj)
-        const buf = doc.getZip().generate({
-            type: "nodebuffer",
-            compression: "DEFLATE",
-        });
-        fs.writeFileSync(`././apps/NestBackend/public/output.docx`,buf)
-    }
-
-
-
-    writePdf(data,body: DocxDto){
-        const path = `././apps/NestBackend/public`
-        const template = data.template
-        const htmlTemplate = fs.readFileSync(`${path}template/${template}`,'utf-8')
-        const regex = /\{\{(\w+)\}\}/g;
-        let match:RegExpExecArray;
-        const currentTime = new Date().getTime().toLocaleString()
-        const wordsArray:string[]= [];
-        if(!fs.existsSync(data.userid))
-            fs.mkdirSync(data.userid)
-      
-        while ((match = regex.exec(htmlTemplate)) !== null) {
-          wordsArray.push(match[1]);
-        }
-        console.log(wordsArray)
-        const options = {
-            format: 'A4',
-            orientation: 'portrait',
-            border: '10mm',
-        };
-
-        const fieldObj:{[key:string]:string} = {}
-        wordsArray.forEach((field) =>{
-            fieldObj[field] = body[field]
-        })
-        
-        const document = {
-            html: htmlTemplate,
-            data: fieldObj,
-            path:`${path}/${data.userid}/${currentTime}.pdf`,
-            type: '',
-        };
-        
-        pdf.create(document, options)
-            .then((res) => {
-                console.log('PDF generated successfully:', res.filename);
-            })
-            .catch((error) => {
-                console.error('Error generating PDF:', error);
-            });
     }
 
 }

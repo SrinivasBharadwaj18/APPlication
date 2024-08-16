@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from "class-validator";
 
-export class DocxDto{
+export class ReportDto{
 
     @IsString()
     @IsNotEmpty()

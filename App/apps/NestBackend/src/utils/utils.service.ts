@@ -1,16 +1,28 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import * as fs from 'fs'
-import { DocxDto } from '../auth/dtos/docx.dto';
+import { ReportDto } from './dtos/docx.dto';
 import pdf from 'pdf-creator-node';
 import { info } from './utils.controller';
+import { promisify } from 'util';
+import mongoose, { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { Chat } from './schemas/chat.schema';
+import { BotDto } from './dtos/bot.dto';
 
 const BASE_PATH = `././apps/NestBackend/public/`
+const readFile = promisify(fs.readFile)
+const writeFile = promisify(fs.writeFile)
 
 @Injectable()
 export class UtilsService {
 
+    constructor(
+        @InjectModel(Chat.name)
+        private ChatModel: Model<Chat>
+    ){}
 
-    getReportData(template:string,body: DocxDto){
+
+    getReportData(template:string,body: ReportDto){
         let match:RegExpExecArray;
         const regex = /\{\{(\w+)\}\}/g;
         const wordsArray:string[]= [];
@@ -28,7 +40,7 @@ export class UtilsService {
         return fieldObj
     }
 
-    generateReport(template:string,body:DocxDto,id:string, info: info){
+    generateReport(template:string,body:ReportDto,id:string, info: info){
 
         const currentTime = new Date().toISOString().replace(/[-:.]/g, '_')
         const fieldObj = this.getReportData(template,body)
@@ -57,7 +69,7 @@ export class UtilsService {
 
     }
 
-    writePdf(body: DocxDto, request, info:info){
+    writePdf(body: ReportDto, request, info:info){
 
 
         const {id} = request.user
@@ -71,16 +83,46 @@ export class UtilsService {
         return this.generateReport(htmlTemplate,body,id, info)
     }
 
+    async getData(fileName: string, body:any){
+        const FOLDER_NAME = '././apps/NestBackend/public'
+        const actions:string = await readFile(`${FOLDER_NAME}/ ${fileName}`,'utf-8')
+        const data:string = await readFile(`${BASE_PATH}/data.json`,'utf-8')
+        const myArr:unknown = JSON.parse(data)
+        const actionArr:unknown = JSON.parse(actions)
+        myArr["actions"] = actionArr
+        const resData:string = JSON.stringify(myArr)
+        await writeFile(`${BASE_PATH}/data.json`,resData,'utf-8')
+    }
+
+    async getBotMessage(info:BotDto){
+        const {message , id, source, timestamp} = info
+        const findId = await this.ChatModel.findOne({userId: id})
+        const livechat = [{source, timestamp, message}]
+        const chat = livechat[0] 
+        const userID = new mongoose.Types.ObjectId(id)
+        if (!findId){
+            const chatLog = await this.ChatModel.create({livechat:livechat,userId:userID})
+            console.log("created chat: ",chatLog)
+            return message
+        }
+        else{
+            const chatlog = await this.ChatModel.findOneAndUpdate({userId: id},{$push: {livechat:chat}},{new:true})   
+            console.log("updated chat: ",chatlog)
+            return message
+        } 
+
+    }
+
+    async saveFile(){
+        const document = await this.ChatModel.find()
+        document.map((userlog)=>{
+            const {_id, livechat} = userlog
+            const currentDate = new Date().toDateString()
+
+            const chatLog = {[currentDate]:livechat}
+            const file=JSON.stringify(chatLog)
+            writeFile(`${BASE_PATH}${_id}.json`,file,'utf-8')
+        })
+    }
+
 }
-
-
-// public> template>>> reports>>> template1, 2, 3
-/// type(reports/logs) :enum
-/// template number
-///file should be saved as time_template.docx
-/// {device_id}{report_type}
-
-
-
-
-

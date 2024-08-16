@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Headers, HttpException, Param, Patch, Post, Query, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Patch, Post, UnauthorizedException, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpUserDto } from './dtos/SignUpUser.dto';
 import { LoginUserDto } from './dtos/LoginUser.dto';
@@ -9,12 +9,7 @@ import { Users } from '../users/schemas/users.schema';
 import mongoose, { AnyObject } from 'mongoose';
 import { SignupInterceptor } from './interceptors/signup.interceptor';
 import { UpdateInterceptor } from './interceptors/update.interceptor';
-import { Express } from 'express'
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { BotDto } from './dtos/bot.dto';
-import { Cron } from '@nestjs/schedule';
-import { DocxDto } from './dtos/docx.dto';
+
 
 
 @Controller('auth')
@@ -28,7 +23,6 @@ export class AuthController {
     private async GetUsers():Promise<(mongoose.Document<unknown, AnyObject, Users> & Users & {
         _id: mongoose.Types.ObjectId;
     })[]>{
-        console.log("inside the get users")
         return this.AuthService.getAllUsers()
 
     }
@@ -64,46 +58,5 @@ export class AuthController {
         return this.AuthService.updateUser(userid,UpdateUser)
     }
 
-    // @Patch('update/json')
-    // private async update(@Query() fileName: string, @Body() body: any){
-    //     return this. AuthService.getData(fileName, body)
-    // }
-
-//file upload using multer
-    @Post('/upload')
-    @UseInterceptors(FileInterceptor('file',{
-        storage: diskStorage({
-            destination: './uploadedFiles',
-            filename(req, file, callback) {
-                const filename = file.originalname
-                callback(null,filename)
-            },
-        })
-    }))
-    uploadFile(@UploadedFile() file:Express.Multer.File){
-        if(!file) throw new HttpException("no file submitted",400)
-        console.log("file:", file)
-        return "we have the file"
-    }
-    @Post('/bot')
-    async Bot(@Body() input:BotDto){
-        const botMessage = await this.AuthService.getBotMessage(input)
-        return botMessage
-    }
-
-    // @Cron('0 */2 9-17 * * *')
-    async handleSaveFile(){
-        return await this.AuthService.saveFile()
-    }
-
-    @Post('/docx')
-    async writeDocxFile(@Body() body: DocxDto){
-        return await this.AuthService.writeWord(body)
-    }
-
-    // @Post('/pdf')
-    // writePdfFile(@Param() data: any, @Body() body:DocxDto){
-    //     return this.AuthService.writePdf(data, body)
-    // }
 }
 
