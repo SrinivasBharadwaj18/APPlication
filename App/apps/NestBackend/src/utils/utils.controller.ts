@@ -32,8 +32,8 @@ export class UtilsController {
 
     
     @Patch('update/json')
-    private async update(@Query() fileName: string, @Body() body: any){
-        return this. utilService.getData(fileName, body)
+    private async update(@Query() fileName: string){
+        return this. utilService.getData(fileName)
     }
 
     @Post('/upload')

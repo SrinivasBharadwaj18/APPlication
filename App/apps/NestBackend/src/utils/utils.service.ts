@@ -83,9 +83,8 @@ export class UtilsService {
         return this.generateReport(htmlTemplate,body,id, info)
     }
 
-    async getData(fileName: string, body:any){
-        const FOLDER_NAME = '././apps/NestBackend/public'
-        const actions:string = await readFile(`${FOLDER_NAME}/ ${fileName}`,'utf-8')
+    async getData(fileName: string){
+        const actions:string = await readFile(`${BASE_PATH}${fileName}`,'utf-8')
         const data:string = await readFile(`${BASE_PATH}/data.json`,'utf-8')
         const myArr:unknown = JSON.parse(data)
         const actionArr:unknown = JSON.parse(actions)
@@ -112,7 +111,7 @@ export class UtilsService {
         } 
 
     }
-
+//
     async saveFile(){
         const document = await this.ChatModel.find()
         document.map((userlog)=>{

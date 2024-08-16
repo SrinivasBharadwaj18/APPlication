@@ -25,7 +25,7 @@ function ChatBot() {
     if (inputText !== ""){
         const userTime = new Date().toLocaleString();
         setMessageArr((prev:any) => [...prev, { type: 'user', message: inputText , time: userTime}]);
-        axios.post(`${BASE_API_URL}auth/bot`,{source:'user', message:inputText, timestamp: userTime, id: id})
+        axios.post(`${BASE_API_URL}utils/bot`,{source:'user', message:inputText, timestamp: userTime, id: id})
         .then((res)=>{
             const output = res.data
             setMessageArr((prev:any) => [...prev, {type:'bot',message:output, time: botTime}]);

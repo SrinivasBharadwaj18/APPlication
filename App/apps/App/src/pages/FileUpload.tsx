@@ -1,12 +1,15 @@
 import axios from "axios"
 import { useState } from "react"
+import { useAppDispatch } from "../hooks";
+import { setSnack } from "../features/token/snackSlice";
 
 
 
 export default function FileUploadpage(){
     const BASE_URL = import.meta.env.VITE_BASE_URL
-    const URL = `${BASE_URL}auth/upload` 
+    const URL = `${BASE_URL}utils/upload` 
     const [file, setFile] = useState<File | null>(null);
+    const dispatch = useAppDispatch();
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files.length > 0) {
@@ -29,11 +32,11 @@ export default function FileUploadpage(){
 
     axios
       .post(URL, formData, config)
-      .then((response) => {
-        console.log("File uploaded successfully:", response.data);
+      .then(() => {
+        dispatch(setSnack({message:"File uploaded successfully", severity: "success"}))
       })
-      .catch((error) => {
-        console.error("Error uploading file:", error);
+      .catch(() => {
+        dispatch(setSnack({message:"Error uploading file", severity:"error"}))
       });
   }
 
