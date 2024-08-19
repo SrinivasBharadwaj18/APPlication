@@ -33,7 +33,7 @@ export function LandingPage(){
 
                     {option && 
                     <div className="landing">
-                        <SignUp messageText="SignUp" RoleName="basic user" title="SignUp" />
+                        <SignUp messageText="SignUp" RoleName="basic user" title="Sign Up" />
                         <div style={{paddingTop: "10px", color: "blue", textDecorationLine:"underline"}} >
                             <span onClick={getLogin} >
                                 Login

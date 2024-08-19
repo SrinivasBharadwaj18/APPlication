@@ -5,6 +5,8 @@ import { useEffect, useState } from "react"
 import Button from '@mui/material/Button'
 import { addRest } from "../features/token/roleSlice"
 import {User} from "../helpers/types"
+import { buttonStyle } from "../styles/syles"
+
 
 const Base = import.meta.env.VITE_BASE_URL
 export function Welcome(){
@@ -23,11 +25,14 @@ export function Welcome(){
     
         )
         .then((res)=>{
-            const restrictedFeatures = res.data.role.restrictedFeatures
-            if (restrictedFeatures.includes('test')){
-                setRestricted(true)
-                dispatch(addRest({rest: restrictedFeatures}))
+            if(res.data.role){
+                const restrictedFeatures = res.data.role.restrictedFeatures
+                if (restrictedFeatures.includes('test')){
+                    setRestricted(true)
+                    dispatch(addRest({rest: restrictedFeatures}))
+                }
             }
+            dispatch(addRest({rest: []}))
         })
 
     },[])
@@ -85,11 +90,11 @@ export function Welcome(){
         <>
         <div className="welcomePage">
             <h1>Welcome</h1>
-            <Button style={{marginRight: "5px"}} variant="contained"><Link style={{textDecoration:'none', color: "white"}} to="uploadFile">UploadFile</Link></Button>
-            <Button style={{marginRight: "5px"}} variant="contained"><Link style={{textDecoration:'none', color: "white"}} to="chatBot">ChatBot</Link></Button>
-            <Button style={{marginRight: "5px"}} variant="contained" onClick={handleClick}>users</Button>
-            <Button style={{marginRight: "5px"}} variant="contained"><Link style={{textDecoration:'none', color: "white"}} to="UpdateUser">UpdateUser</Link></Button>
-            {!restricted && <Button style={{color:"white"}}  variant="contained"><Link style={{textDecoration:'none' , color: "white"}} to="CreateUser">CreateUser</Link></Button>}
+            <Button sx={buttonStyle} variant="contained"><Link style={{textDecoration:'none', color: "white"}} to="uploadFile">UploadFile</Link></Button>
+            <Button sx={buttonStyle} variant="contained"><Link style={{textDecoration:'none', color: "white"}} to="chatBot">ChatBot</Link></Button>
+            <Button sx={buttonStyle} variant="contained" onClick={handleClick}>users</Button>
+            <Button sx={buttonStyle} variant="contained"><Link style={{textDecoration:'none', color: "white"}} to="UpdateUser">UpdateUser</Link></Button>
+            {!restricted && <Button style={{color:"white", width:'auto'}}  variant="contained"><Link style={{textDecoration:'none' , color: "white"}} to="CreateUser">CreateUser</Link></Button>}
             </div> 
             <br /><br />
             {showUsers()}

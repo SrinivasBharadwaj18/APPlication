@@ -59,7 +59,7 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
     <div className="Page">
       <div className="card">
         <header>
-          <h1>{props.title}</h1>
+          <h1 style={{overflow:'-moz-hidden-unscrollable'}}>{props.title}</h1>
         </header>
         <div>
           <form onSubmit={handleClick}>
@@ -73,8 +73,8 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
 
               <InputLabel id="demo-simple-select-autowidth-label">Role</InputLabel>
 
-              <Select labelId="demo-simple-select-autowidth-label" id="demo-simple-select-autowidth" name="role" value={role} onChange={handleChange} label="Role">
-                <MenuItem value={props.RoleName}>{props.RoleName}</MenuItem>
+              <Select sx={{width:'150px'}} labelId="demo-simple-select-autowidth-label" id="demo-simple-select-autowidth" name="role" value={role} onChange={handleChange} label="Role">
+                <MenuItem  value={props.RoleName}>{props.RoleName}</MenuItem>
               </Select>
 
             </FormControl>
