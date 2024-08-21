@@ -13,9 +13,6 @@
     box-shadow: 0 4px 4px rgba(0,0,0,0.4);
   }
 
-  .main{
-    margin: 30px 0 0;
-  }
  .messages{
     display: flex;
     flex-direction: column;
@@ -57,11 +54,10 @@
     margin-right: 15px;
     opacity: 0.5;
   }
+
   .bottom{
     margin: 20px 0 0;
     bottom: 0;
-  }
-  .btm{
     display: flex;
     align-items: center;
   }

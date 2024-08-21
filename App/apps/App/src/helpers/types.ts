@@ -1,10 +1,13 @@
-export type Form = {
+export type CreatUserForm  = {
     username: string
-    password: string
     firstname: string
     lastname: string
     emailid: string
+    password:string
+    age:string
 }
+
+export type Form = Omit<CreatUserForm ,'password'>
 
 export type User = {
     _id:string,

@@ -11,7 +11,7 @@ import { AdminRoutes } from "./utils/AdminRoutes";
 import { NoAccess } from "./pages/NoAccess";
 import SignUP from "./pages/CreateUser";
 import FileUploadpage from "./pages/FileUpload";
-import ChatBot from "./pages/bot";
+import ChatBot from "./pages/ChatBot";
 
 
 export default function App(){

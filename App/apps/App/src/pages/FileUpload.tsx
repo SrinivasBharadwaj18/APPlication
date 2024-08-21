@@ -2,6 +2,7 @@ import axios from "axios"
 import { useState } from "react"
 import { useAppDispatch } from "../hooks";
 import { setSnack } from "../features/token/snackSlice";
+import AAPIService from "../services/aapi.service";
 
 
 
@@ -10,6 +11,7 @@ export default function FileUploadpage(){
     const URL = `${BASE_URL}utils/upload` 
     const [file, setFile] = useState<File | null>(null);
     const dispatch = useAppDispatch();
+    const apiService = new AAPIService()
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files.length > 0) {
@@ -21,7 +23,7 @@ export default function FileUploadpage(){
     event.preventDefault();
 
     if (!file) {
-      console.error("No file selected!");
+      dispatch(setSnack({message:"no file selected", severity:"error"}))
       return;
     }
 
@@ -30,7 +32,7 @@ export default function FileUploadpage(){
 
     const config = { headers: { "Content-Type": "multipart/form-data" } };
 
-    axios
+    apiService
       .post(URL, formData, config)
       .then(() => {
         dispatch(setSnack({message:"File uploaded successfully", severity: "success"}))

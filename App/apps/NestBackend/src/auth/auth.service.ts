@@ -1,19 +1,13 @@
-import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { AnyObject, Model } from 'mongoose';
 import { SignUpUserDto } from './dtos/SignUpUser.dto';
 import { LoginUserDto } from './dtos/LoginUser.dto';
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
-import { UpdateUserDto } from '../users/dtos/UpdateUser.dto';
 import { Users } from '../users/schemas/users.schema';
 import { Roles } from '../users/schemas/roles.schema';
-
-interface restrictedFeatures{
-
-    restrictedFeatures: string[] | []
-        
-}
+import { restrictedFeatures } from './types/auth.types';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +22,6 @@ export class AuthService {
 
     checkRole(role: string):restrictedFeatures{
         if(role === "basic user"){
-            console.log(role)
             const ResFeatures:restrictedFeatures = {
                 restrictedFeatures: ['test', 'create user']
             }
@@ -52,80 +45,70 @@ export class AuthService {
             throw new UnauthorizedException("user already present")
         }
         const ResFeatures = this.checkRole(role)
-        console.log(ResFeatures)
-        const presentrole = await this.RolesModel.findOne({rolename: role})
-        console.log("role: ",presentrole)
-
-        if(!presentrole){
-            const roles = new this.RolesModel({rolename: role, restrictedFeatures:ResFeatures.restrictedFeatures})
-            console.log(roles)
-            const savedRoles = await roles.save()
-            const createdUser = await this.UsersModel.create({...signupUser, role: savedRoles._id})
+        try{
+            const presentrole = await this.RolesModel.findOne({rolename: role})
+            if(!presentrole){
+                const roles = new this.RolesModel({rolename: role, restrictedFeatures:ResFeatures.restrictedFeatures})
+                const savedRoles = await roles.save()
+                const createdUser = await this.UsersModel.create({...signupUser, role: savedRoles._id})
+                await createdUser.save()
+                return createdUser
+            }  
+            const createdUser = await this.UsersModel.create({...signupUser,role: presentrole._id})
             await createdUser.save()
             return createdUser
-        }  
-        const createdUser = await this.UsersModel.create({...signupUser,role: presentrole._id})
-        await createdUser.save()
-        return createdUser
+        }
+        catch(error){
+            throw new HttpException('something went wrong while creating a user', 500)
+        }
+        
     }
 
 
 
     async login(loginUser: LoginUserDto): Promise<{token: string}>{
-        const { username } = loginUser
-        const user = await this.UsersModel.findOne({username})      
-        const token = this.JwtService.sign({id:user._id})
-        return {token}
+        try{
+            const { username } = loginUser
+            const user = await this.UsersModel.findOne({username})      
+            const token = this.JwtService.sign({id:user._id})
+            return {token}
+        }
+        catch{
+            throw new InternalServerErrorException('something went wrong while logging in')
+        }
         }
 
     async findOne(username:string){
-        const user = await this.UsersModel.findOne({username})
-        return user
+        try{
+            const user = await this.UsersModel.findOne({username})
+            return user
+        }
+        catch{
+            throw new InternalServerErrorException('user not found')
+        }
     }
 
     async validateUser(username : string, password: string):Promise<Users>{
         const user = await this.UsersModel.findOne({username})
-        if (!user){
-            throw new UnauthorizedException("signup first")
-        }
         const isPasswordMatched = await bcrypt.compare(password, user.password)
-        if(!isPasswordMatched){
-            throw new UnauthorizedException("invalid password")
+        if (!user || !isPasswordMatched){
+            throw new UnauthorizedException("invalid credentials")
         }
         return user
     }
 
-    async finduser(userId: string){
-        return this.UsersModel.findById(userId)
-
-    }
 
 
-    async updateUser(id: string, UpdateUser: UpdateUserDto){
-        const validate = mongoose.Types.ObjectId.isValid(id)
-
-        if(!validate){
-            throw new HttpException("invalid user", 400)
-        }
-        const {password} = UpdateUser
-        if(password === undefined){
-            const user = await this.UsersModel.findByIdAndUpdate(id,UpdateUser, {new: true})
-            return user
-        }
-        UpdateUser.password = await bcrypt.hash(password,10)
-        const user = await this.UsersModel.findByIdAndUpdate(id,UpdateUser, {new: true})
-        if(!user){
-            throw new HttpException("user not found",400)
-        }
-        return user
-    }
 
     async getAllUsers(): Promise<(mongoose.Document<unknown, AnyObject, Users> & Users & {
         _id: mongoose.Types.ObjectId;
     })[]>{
-        const users = await this.UsersModel.find()
-        console.log(users)
-        return this.UsersModel.find()
+        try{
+            return this.UsersModel.find()
+        }
+        catch{
+            throw new NotFoundException('could not find users')
+        }
     }
 
 }

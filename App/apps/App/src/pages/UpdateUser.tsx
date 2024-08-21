@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../hooks"
 import { Button, Input, TextField } from "@mui/material"
 import { setSnack } from "../features/token/snackSlice";
@@ -6,18 +6,30 @@ import {Form} from '../helpers/types'
 import { APIService } from "../services/api.service";
 import axios from "axios";
 
+const Base = import.meta.env.VITE_BASE_URL
 export default function UpdateUser(){
-  
+
   const [ upstate, setUpState] = useState<Form>({
     username: "",
-    password: "",
     firstname: "",
     lastname: "",
     emailid: "",
+    age: ""
     
   })
+  useEffect(()=>{
+    axios.get(`${Base}users/${userId}`,{  headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }}
+  )
+  .then((res)=>{
+    const userDetails = res.data
+    setUpState({username:userDetails.username,firstname: userDetails.firstname,lastname: userDetails.lastname, emailid: userDetails.emailid, age:userDetails.age })
+
+  })
+  }, [])
   
-  const [age, setAge] = useState<number| string>("")
   const dispatch = useAppDispatch() 
   
   
@@ -30,7 +42,6 @@ export default function UpdateUser(){
     { name: "firstname", value: upstate.firstname},
     { name: "lastname", value: upstate.lastname},
     { name: "emailid", value: upstate.emailid},
-    { name: "password", value: upstate.password},
   ];
   
   function handleClick(event:any):void{
@@ -38,7 +49,7 @@ export default function UpdateUser(){
     const apiService:APIService = new APIService()
     if(token){
       apiService.patch(
-      `auth/update`,
+      `users/update`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -46,7 +57,7 @@ export default function UpdateUser(){
           "Content-Type": "application/json"
         }
     },
-      {username: upstate.username, firstname:upstate.firstname , lastname: upstate.lastname, emailid:upstate.emailid, password: upstate.password , age:age},
+      {username: upstate.username, firstname:upstate.firstname , lastname: upstate.lastname, emailid:upstate.emailid, age:upstate.age},
       dispatch
   )
         .then(() => {
@@ -59,9 +70,6 @@ export default function UpdateUser(){
         
   }
   function handleChange(event: React.ChangeEvent<HTMLInputElement>){
-    if (event.target.name === "age"){
-      setAge(event.target.value)
-  }
     const { name, value } = event.target;
     setUpState((prev) => ({
       ...prev,
@@ -70,7 +78,6 @@ export default function UpdateUser(){
 
   }
 
-  
 
   return(
       <div className="UserPage">
@@ -79,7 +86,7 @@ export default function UpdateUser(){
               {fieldNames.map((field ,index) => (
                   <TextField style={{display: "block"}} key={index} name={field.name} placeholder={field.name} value={field.value} id="margin-dense" margin="dense" onChange={handleChange}/>
               ))}
-              <Input type = "number" aria-label="Demo input" placeholder="age" name="age" value={age}  onChange={handleChange} />
+              <Input type = "number" aria-label="Demo input" placeholder="age" name="age" value={upstate.age}  onChange={handleChange} />
               <br />
               <br />
               <Button variant="contained" type="submit">Submit</Button>

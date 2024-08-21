@@ -1,42 +1,36 @@
-import { Body, Controller, Get, Param, Patch, Post, Session, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch,Headers, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dtos/createUser.dto';
 import { UpdateUserDto } from './dtos/UpdateUser.dto';
-
 import { Users } from './schemas/users.schema';
 import { JwtGuard } from '../auth/guards/jwt.guard';
+import { UpdateInterceptor } from '../auth/interceptors/update.interceptor';
 
 
 @Controller('users')
 export class UsersController {
     constructor(
-        private UsersService : UsersService
+        private usersService : UsersService
     ){}
 
     @UseGuards(JwtGuard)
     @Get()
-    GetAllUsers(){
-        return this.UsersService.getAllUsers()
+    private async GetAllUsers(){
+        return await this.usersService.getAllUsers()
     }
     
-    @UseGuards(JwtGuard)
-    @Post()
-    async CreateUser(@Body() createUser :  CreateUserDto):Promise<Users>{
-        const user = await this.UsersService.createUser(createUser)
-        return user
-    }
     
     @Get(':id')
-    async GetUserById(@Param('id') id: string): Promise<Users> {
-      const user = await this.UsersService.getUserById(id)
+    private async GetUserById(@Param('id') id: string): Promise<Users> {
+      const user = await this.usersService.getUserById(id)
       return user;
     }
     
+    @UseInterceptors(UpdateInterceptor)
     @UseGuards(JwtGuard)
+    @UsePipes(ValidationPipe)
     @Patch("/update")
-    async UpdateUserById(@Session() session :{userId: string}, @Body() updateUser : UpdateUserDto):Promise<Users>{
-        return await this.UsersService.updateUserById(session.userId, updateUser)
+    private async Update(@Body() UpdateUser: UpdateUserDto, @Headers('userid') userid: string ){
+        return this.usersService.updateUser(userid,UpdateUser)
     }
-
     
 }

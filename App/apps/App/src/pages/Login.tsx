@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../features/token/tokenSlice";
@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { setSnack } from "../features/token/snackSlice";
 import { login } from "../features/token/logSlice";
+import AAPIService from "../services/aapi.service";
 
 export default function Login(){
     const [name, setName] = useState<string>("")
@@ -25,12 +26,14 @@ export default function Login(){
     }
     function handleClick(event:any):void{
         event.preventDefault();
-        axios.post(`${BASE_API_URL}auth/login`,{
+        const apiService = new AAPIService()
+        apiService.post(`auth/login`,{
             username: name,
             password: password
         })
-        .then((res)=>{
-            dispatch(setUser({token:res.data.Token, userid: res.data.userId}))
+        .then((res:any)=>{
+            console.log(res)
+            dispatch(setUser({token:res?.data.Token, userid: res?.data.userId}))
             dispatch(setSnack({message:"Logged In", severity: "success"}))
             dispatch(login())
             navigate("/Welcome")      

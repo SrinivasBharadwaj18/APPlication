@@ -10,29 +10,22 @@ export class APIService {
     
     public async  patch<T>(url: string, headers:any, requestBody: unknown,dispatch:any ): Promise<AxiosResponse<T>| undefined> {
         axios.interceptors.response.use((response)=>{
-            console.log(response.status)
             return response
         },async (error)=>{
-            console.log(error.response.status)
             if(error.response.status === 401)
             {
                 // localStorage.clear()
-                console.log("inside the axios interceptor error response")
                 localStorage.removeItem('token')
                 // window.location.reload()
             }
-            console.log("inside the interceptor")
-            console.log("inside the interceptor error response")
             return Promise.reject(error)
         })
     try{
         const response = await axios.patch<T>(`${this.baseURL}${url}`, requestBody, headers );
-        console.log("in the try block")
         return response;
     }
     catch(error:any){
         if(error.response.status === 401){
-            console.log("after patch")
             // dispatch(logout())
             dispatch({ type: PURGE })
             await persistor.purge();

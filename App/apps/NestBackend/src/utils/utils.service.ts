@@ -1,8 +1,8 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import * as fs from 'fs'
-import { ReportDto } from './dtos/docx.dto';
+import { ReportDto } from './dtos/report.dto';
 import pdf from 'pdf-creator-node';
-import { info } from './utils.controller';
+import { info } from './types/util.types';
 import { promisify } from 'util';
 import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -10,7 +10,6 @@ import { Chat } from './schemas/chat.schema';
 import { BotDto } from './dtos/bot.dto';
 
 const BASE_PATH = `././apps/NestBackend/public/`
-const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
 
 @Injectable()
@@ -40,7 +39,7 @@ export class UtilsService {
         return fieldObj
     }
 
-    generateReport(template:string,body:ReportDto,id:string, info: info){
+    async generateReport(template:string,body:ReportDto,id:string, info: info){
 
         const currentTime = new Date().toISOString().replace(/[-:.]/g, '_')
         const fieldObj = this.getReportData(template,body)
@@ -69,7 +68,7 @@ export class UtilsService {
 
     }
 
-    writePdf(body: ReportDto, request, info:info){
+    async writePdf(body: ReportDto, request, info:info){
 
 
         const {id} = request.user
@@ -80,17 +79,7 @@ export class UtilsService {
         if(!fs.existsSync(`${BASE_PATH}${request.user.id}`))
             fs.mkdirSync(`${BASE_PATH}${request.user.id}`)
         
-        return this.generateReport(htmlTemplate,body,id, info)
-    }
-
-    async getData(fileName: string){
-        const actions:string = await readFile(`${BASE_PATH}${fileName}`,'utf-8')
-        const data:string = await readFile(`${BASE_PATH}/data.json`,'utf-8')
-        const myArr:unknown = JSON.parse(data)
-        const actionArr:unknown = JSON.parse(actions)
-        myArr["actions"] = actionArr
-        const resData:string = JSON.stringify(myArr)
-        await writeFile(`${BASE_PATH}/data.json`,resData,'utf-8')
+        return await this.generateReport(htmlTemplate,body,id, info)
     }
 
     async getBotMessage(info:BotDto){
@@ -100,13 +89,11 @@ export class UtilsService {
         const chat = livechat[0] 
         const userID = new mongoose.Types.ObjectId(id)
         if (!findId){
-            const chatLog = await this.ChatModel.create({livechat:livechat,userId:userID})
-            console.log("created chat: ",chatLog)
+            await this.ChatModel.create({livechat:livechat,userId:userID})
             return message
         }
         else{
-            const chatlog = await this.ChatModel.findOneAndUpdate({userId: id},{$push: {livechat:chat}},{new:true})   
-            console.log("updated chat: ",chatlog)
+            await this.ChatModel.findOneAndUpdate({userId: id},{$push: {livechat:chat}},{new:true})   
             return message
         } 
 

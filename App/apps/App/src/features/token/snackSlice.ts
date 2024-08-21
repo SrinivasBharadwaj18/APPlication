@@ -5,7 +5,7 @@ import { AlertColor, AlertPropsColorOverrides } from '@mui/material/Alert';
 export interface snackState{
     open : boolean
     message? : string
-    severity: OverridableStringUnion<AlertColor, AlertPropsColorOverrides> | undefined
+    severity?: OverridableStringUnion<AlertColor, AlertPropsColorOverrides>
 }
 const initialState: snackState ={
     open : false,
@@ -24,9 +24,7 @@ export const snackSlice = createSlice({
             state.severity = action.payload.severity
         },
 
-        hideSnackbar: (state) => {
-            state.open = false;
-          },
+        hideSnackbar: () => initialState
     }
 })
 

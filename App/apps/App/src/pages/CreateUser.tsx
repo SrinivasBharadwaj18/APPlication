@@ -1,25 +1,29 @@
 import { useState } from "react";
-import axios from "axios";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useAppDispatch } from "../hooks";
 import { setSnack } from "../features/token/snackSlice";
 import { FormControl, Input, InputLabel, MenuItem, Select } from "@mui/material";
-import {Form} from '../helpers/types'
+import {CreatUserForm} from '../helpers/types'
+import AAPIService from "../services/aapi.service";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
+import React from "react";
 
 export default function SignUp(props: { messageText: string; RoleName: string; title: string }) {
-  const [upstate, setUpState] = useState<Form>({
+  const [upstate, setUpState] = useState<CreatUserForm>({
     username: "",
     password: "",
     firstname: "",
     lastname: "",
     emailid: "",
+    age: ""
   });
-
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-17'));
   const [role, setRole] = useState<string>(props.RoleName);
-  const [age, setAge] = useState<number | string>("");
   const dispatch = useAppDispatch();
-  const BASE_API_URL = import.meta.env.VITE_BASE_URL
 
   const fieldNames: { name: string; value: string;}[]  = [
     { name: "username", value: upstate.username},
@@ -29,13 +33,12 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
     { name: "password", value: upstate.password},
 ];
 
-  function handleChange(event: any): void {
+  function handleChange(event: { target: { name: string; value: string; }; }): void {
     const { name, value } = event.target;
-    if (name === "age") {
-      setAge(value);
-    } else if (name === "role") {
+  if (name === "role") {
       setRole(value as string);
     } else {
+      console.log(value)
       setUpState((prev) => ({
         ...prev,
         [name]: value,
@@ -43,10 +46,10 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
     }
   }
 
-  function handleClick(event: any): void {
+  function handleClick(event: { preventDefault: () => void; }): void {
     event.preventDefault();
-    axios
-      .post(`${BASE_API_URL}auth/signup`, { username: upstate.username, firstname: upstate.firstname, lastname: upstate.lastname, emailid: upstate.emailid, role: role, password: upstate.password, age: age,})
+    const apiService:AAPIService = new AAPIService()
+    apiService.post(`auth/signup`,{ username: upstate.username, firstname: upstate.firstname, lastname: upstate.lastname, emailid: upstate.emailid, role: role, password: upstate.password, age: upstate.age})
       .then(() => {
         dispatch(setSnack({ message: `${props.messageText} Successful`, severity: "success" }));
       })
@@ -67,7 +70,15 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
               <TextField required style={{ display: "block" }} key={index} name={field.name} placeholder={field.name} value={field.value} margin="dense" onChange={handleChange}/>
             ))}
 
-            <Input type= "number" aria-label="Demo input" placeholder="age" name="age" value={age} onChange={handleChange}/>
+            <Input type= "date" aria-label="Demo input" placeholder="age" name="age" value={upstate.age} onChange={handleChange}/>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+          label="Controlled picker"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+        />
+
+            </LocalizationProvider>
 
             <FormControl sx={{ m: 1, minWidth: 200 }}>
 

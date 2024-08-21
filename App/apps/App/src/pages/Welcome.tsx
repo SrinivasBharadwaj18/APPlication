@@ -1,4 +1,4 @@
-import axios from "axios"
+import { AxiosResponse } from "axios"
 import { useAppDispatch, useAppSelector } from "../hooks"
 import { Link } from "react-router-dom"
 import { useEffect, useState } from "react"
@@ -6,6 +6,7 @@ import Button from '@mui/material/Button'
 import { addRest } from "../features/token/roleSlice"
 import {User} from "../helpers/types"
 import { buttonStyle } from "../styles/syles"
+import AAPIService from "../services/aapi.service"
 
 
 const Base = import.meta.env.VITE_BASE_URL
@@ -15,16 +16,22 @@ export function Welcome(){
     const token = useAppSelector((state)=> state.user.token)
     const userId = useAppSelector((state)=> state.user.userid)
     const dispatch = useAppDispatch()
+    const apiService = new AAPIService()
+    const fieldNames: {to:string}[] = [
+        {to: "uploadFile"},
+        {to:"chatBot"},
+        {to:"UpdateUser"}
+    ]
 
 
     useEffect(()=>{
-        axios.get(`${Base}users/${userId}`,{  headers: {
+        apiService.get(`${Base}users/${userId}`,{  headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }}
     
         )
-        .then((res)=>{
+        .then((res:AxiosResponse<any, any>)=>{
             if(res.data.role){
                 const restrictedFeatures = res.data.role.restrictedFeatures
                 if (restrictedFeatures.includes('test')){
@@ -41,13 +48,14 @@ export function Welcome(){
     const [users, setUsers] = useState([])
 
     async function handleClick(){
-        axios.get(`${Base}users`,{  headers: {
+        apiService.get(`${Base}users`,{  headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }}
 
         )
-        .then((res)=>{
+        .then((res:any)=>{
+            console.log(res)
             setUsers(res.data)
             Deliver(true)
         })
@@ -90,10 +98,10 @@ export function Welcome(){
         <>
         <div className="welcomePage">
             <h1>Welcome</h1>
-            <Button sx={buttonStyle} variant="contained"><Link style={{textDecoration:'none', color: "white"}} to="uploadFile">UploadFile</Link></Button>
-            <Button sx={buttonStyle} variant="contained"><Link style={{textDecoration:'none', color: "white"}} to="chatBot">ChatBot</Link></Button>
+            {fieldNames.map((field,index) =>(
+                <Button sx={buttonStyle} variant="contained"><Link style={{textDecoration:'none', color: "white"}} to={field.to}>{field.to}</Link></Button>
+            ))}
             <Button sx={buttonStyle} variant="contained" onClick={handleClick}>users</Button>
-            <Button sx={buttonStyle} variant="contained"><Link style={{textDecoration:'none', color: "white"}} to="UpdateUser">UpdateUser</Link></Button>
             {!restricted && <Button style={{color:"white", width:'auto'}}  variant="contained"><Link style={{textDecoration:'none' , color: "white"}} to="CreateUser">CreateUser</Link></Button>}
             </div> 
             <br /><br />

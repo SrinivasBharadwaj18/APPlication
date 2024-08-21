@@ -1,42 +1,64 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, HttpException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Users } from './schemas/users.schema';
-import { Model } from 'mongoose';
-import { CreateUserDto } from './dtos/createUser.dto';
+import mongoose, { Model } from 'mongoose';
 import { UpdateUserDto } from './dtos/UpdateUser.dto';
+import * as bcrypt from 'bcrypt'
+
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectModel(Users.name)
-        private UsersModel : Model<Users>
+        private usersModel : Model<Users>
     ){}
 
 
 
-    getAllUsers(): Promise<Users[]>{
-        const users = this.UsersModel.find()
-        return users
+    async getAllUsers(): Promise<Users[]>{
+        try{
+            const users = this.usersModel.find()
+            return users
+        }
+        catch{
+            throw new NotFoundException("couldnt find users")
+        }
 
     }
 
     async getUserById(id: string): Promise<Users> {
-        const user = (await this.UsersModel.findById(id).exec()).populate('role');
-        console.log("user:", user)
-        return user;
+        try{
+            const user = (await this.usersModel.findById(id).exec()).populate('role');
+            return user;
+        }
+        catch{
+            throw new NotFoundException("couldnt find user")
+        }
       }
 
-    createUser(user: CreateUserDto): Promise<Users> {
-        const User = this.UsersModel.create(user)
-        return User
+      async updateUser(id: string, updateUser: UpdateUserDto){
+        try{
 
-    }
-
-
-
-    updateUserById(id: string , updateuser: UpdateUserDto): Promise<Users> | undefined{
-        const user = this.UsersModel.findByIdAndUpdate(id,updateuser)
-        return user
+            const validate = mongoose.Types.ObjectId.isValid(id)
+    
+            if(!validate){
+                throw new HttpException("invalid user", 400)
+            }
+            const {password} = updateUser
+            if(password === undefined){
+                const user = await this.usersModel.findByIdAndUpdate(id,updateUser, {new: true})
+                return user
+            }
+            updateUser.password = await bcrypt.hash(password,10)
+            const user = await this.usersModel.findByIdAndUpdate(id,updateUser, {new: true})
+            if(!user){
+                throw new HttpException("user not found",400)
+            }
+            return user
+        }
+        catch{
+            throw new InternalServerErrorException('something went wrong during updating')
+        }
     }
 
     
