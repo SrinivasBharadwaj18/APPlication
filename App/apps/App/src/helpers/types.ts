@@ -9,6 +9,8 @@ type Credentails = {
     role:string
 }
 
+export type ChatType = {type:string, message:string, time: string}
+
 export type CreatUserForm  = Omit<Credentails, 'age'|'_id'|'role'>
 
 export type Form = Omit<Credentails ,'password'|'_id'|'role'>

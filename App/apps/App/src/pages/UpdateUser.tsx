@@ -9,7 +9,7 @@ import APIService from "../services/api.service";
 const apiService:APIService = new APIService()
 export default function UpdateUser(){
 
-  const [ upstate, setUpState] = useState<Form>({
+  const [ form, setForm] = useState<Form>({
     username: "",
     firstname: "",
     lastname: "",
@@ -25,7 +25,7 @@ export default function UpdateUser(){
   )
   .then((res:AxiosResponse)=>{
     const userDetails = res.data
-    setUpState({username:userDetails.username,firstname: userDetails.firstname,lastname: userDetails.lastname, emailid: userDetails.emailid, age:userDetails.age })
+    setForm({username:userDetails.username,firstname: userDetails.firstname,lastname: userDetails.lastname, emailid: userDetails.emailid, age:userDetails.age })
 
   })
   }, [])
@@ -38,10 +38,10 @@ export default function UpdateUser(){
   
   
   const fieldNames: { name: string; value: string;}[]  = [
-    { name: "username", value: upstate.username},
-    { name: "firstname", value: upstate.firstname},
-    { name: "lastname", value: upstate.lastname},
-    { name: "emailid", value: upstate.emailid},
+    { name: "username", value: form.username},
+    { name: "firstname", value: form.firstname},
+    { name: "lastname", value: form.lastname},
+    { name: "emailid", value: form.emailid},
   ];
   
   function handleClick(event: { preventDefault: () => void; }):void{
@@ -56,7 +56,7 @@ export default function UpdateUser(){
           "Content-Type": "application/json"
         }
     },
-      {username: upstate.username, firstname:upstate.firstname , lastname: upstate.lastname, emailid:upstate.emailid, age:parseInt(upstate.age)})
+      {username: form.username, firstname:form.firstname , lastname: form.lastname, emailid:form.emailid, age:parseInt(form.age)})
         .then(() => {
           dispatch(setSnack({message:'Updated Successfully', severity: 'success'}))
           
@@ -68,7 +68,7 @@ export default function UpdateUser(){
   }
   function handleChange(event: React.ChangeEvent<HTMLInputElement>){
     const { name, value } = event.target;
-    setUpState((prev) => ({
+    setForm((prev) => ({
       ...prev,
       [name]: value
     }));
@@ -83,7 +83,7 @@ export default function UpdateUser(){
               {fieldNames.map((field ,index) => (
                   <TextField style={{display: "block"}} key={index} name={field.name} placeholder={field.name} value={field.value} id="margin-dense" margin="dense" onChange={handleChange}/>
               ))}
-              <Input type = "number" aria-label="Demo input" placeholder="age" name="age" value={upstate.age}  onChange={handleChange} />
+              <Input type = "number" aria-label="Demo input" placeholder="age" name="age" value={form.age}  onChange={handleChange} />
               <br />
               <br />
               <Button variant="contained" type="submit">Submit</Button>
