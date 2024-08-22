@@ -1,8 +1,7 @@
-import axios from "axios"
 import { useState } from "react"
 import { useAppDispatch } from "../hooks";
 import { setSnack } from "../features/token/snackSlice";
-import AAPIService from "../services/aapi.service";
+import APIService from "../services/api.service";
 
 
 
@@ -11,7 +10,7 @@ export default function FileUploadpage(){
     const URL = `${BASE_URL}utils/upload` 
     const [file, setFile] = useState<File | null>(null);
     const dispatch = useAppDispatch();
-    const apiService = new AAPIService()
+    const apiService = new APIService()
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files.length > 0) {

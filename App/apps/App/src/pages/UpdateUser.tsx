@@ -3,10 +3,10 @@ import { useAppDispatch, useAppSelector } from "../hooks"
 import { Button, Input, TextField } from "@mui/material"
 import { setSnack } from "../features/token/snackSlice";
 import {Form} from '../helpers/types'
-import { APIService } from "../services/api.service";
-import axios from "axios";
+import { AxiosResponse } from "axios";
+import APIService from "../services/api.service";
 
-const Base = import.meta.env.VITE_BASE_URL
+const apiService:APIService = new APIService()
 export default function UpdateUser(){
 
   const [ upstate, setUpState] = useState<Form>({
@@ -18,12 +18,12 @@ export default function UpdateUser(){
     
   })
   useEffect(()=>{
-    axios.get(`${Base}users/${userId}`,{  headers: {
+    apiService.get(`users/${userId}`,{  headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     }}
   )
-  .then((res)=>{
+  .then((res:AxiosResponse)=>{
     const userDetails = res.data
     setUpState({username:userDetails.username,firstname: userDetails.firstname,lastname: userDetails.lastname, emailid: userDetails.emailid, age:userDetails.age })
 
@@ -44,9 +44,8 @@ export default function UpdateUser(){
     { name: "emailid", value: upstate.emailid},
   ];
   
-  function handleClick(event:any):void{
+  function handleClick(event: { preventDefault: () => void; }):void{
     event.preventDefault();
-    const apiService:APIService = new APIService()
     if(token){
       apiService.patch(
       `users/update`,
@@ -57,9 +56,7 @@ export default function UpdateUser(){
           "Content-Type": "application/json"
         }
     },
-      {username: upstate.username, firstname:upstate.firstname , lastname: upstate.lastname, emailid:upstate.emailid, age:upstate.age},
-      dispatch
-  )
+      {username: upstate.username, firstname:upstate.firstname , lastname: upstate.lastname, emailid:upstate.emailid, age:parseInt(upstate.age)})
         .then(() => {
           dispatch(setSnack({message:'Updated Successfully', severity: 'success'}))
           

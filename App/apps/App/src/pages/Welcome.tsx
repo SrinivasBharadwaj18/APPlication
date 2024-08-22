@@ -6,7 +6,7 @@ import Button from '@mui/material/Button'
 import { addRest } from "../features/token/roleSlice"
 import {User} from "../helpers/types"
 import { buttonStyle } from "../styles/syles"
-import AAPIService from "../services/aapi.service"
+import APIService from "../services/api.service"
 
 
 const Base = import.meta.env.VITE_BASE_URL
@@ -16,7 +16,7 @@ export function Welcome(){
     const token = useAppSelector((state)=> state.user.token)
     const userId = useAppSelector((state)=> state.user.userid)
     const dispatch = useAppDispatch()
-    const apiService = new AAPIService()
+    const apiService = new APIService()
     const fieldNames: {to:string}[] = [
         {to: "uploadFile"},
         {to:"chatBot"},
@@ -31,7 +31,7 @@ export function Welcome(){
           }}
     
         )
-        .then((res:AxiosResponse<any, any>)=>{
+        .then((res:AxiosResponse)=>{
             if(res.data.role){
                 const restrictedFeatures = res.data.role.restrictedFeatures
                 if (restrictedFeatures.includes('test')){
@@ -54,8 +54,7 @@ export function Welcome(){
           }}
 
         )
-        .then((res:any)=>{
-            console.log(res)
+        .then((res:AxiosResponse)=>{
             setUsers(res.data)
             Deliver(true)
         })
@@ -99,7 +98,7 @@ export function Welcome(){
         <div className="welcomePage">
             <h1>Welcome</h1>
             {fieldNames.map((field,index) =>(
-                <Button sx={buttonStyle} variant="contained"><Link style={{textDecoration:'none', color: "white"}} to={field.to}>{field.to}</Link></Button>
+                <Button key={index} sx={buttonStyle} variant="contained"><Link style={{textDecoration:'none', color: "white"}} to={field.to}>{field.to}</Link></Button>
             ))}
             <Button sx={buttonStyle} variant="contained" onClick={handleClick}>users</Button>
             {!restricted && <Button style={{color:"white", width:'auto'}}  variant="contained"><Link style={{textDecoration:'none' , color: "white"}} to="CreateUser">CreateUser</Link></Button>}

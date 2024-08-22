@@ -1,7 +1,7 @@
 import "../chatbot.css";
 import {SetStateAction, useEffect, useRef, useState} from "react";
 import { useAppSelector } from "../hooks";
-import AAPIService from "../services/aapi.service";
+import APIService from "../services/api.service";
 
 
 const BASE_API_URL = import.meta.env.VITE_BASE_URL
@@ -10,7 +10,7 @@ function ChatBot() {
   const [inputText,setInputText]= useState<string>("")
   const id = useAppSelector((state)=>state.user.userid)
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
-  const apiService = new AAPIService()
+  const apiService = new APIService()
   const indexTime = new Date().getMilliseconds().toLocaleString()
 
   useEffect(() => {

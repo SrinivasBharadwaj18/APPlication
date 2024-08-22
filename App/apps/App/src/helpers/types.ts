@@ -1,20 +1,16 @@
-export type CreatUserForm  = {
+type Credentails = {
+    _id:string,
     username: string
     firstname: string
     lastname: string
     emailid: string
     password:string
     age:string
-}
-
-export type Form = Omit<CreatUserForm ,'password'>
-
-export type User = {
-    _id:string,
-    username:string,
-    emailid:string,
-    firstname:string,
-    lastname:string,
     role:string
-    age:string
 }
+
+export type CreatUserForm  = Omit<Credentails, 'age'|'_id'|'role'>
+
+export type Form = Omit<Credentails ,'password'|'_id'|'role'>
+
+export type User = Omit<Credentails,'password'>

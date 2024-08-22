@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UnauthorizedException, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, UnauthorizedException, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpUserDto } from './dtos/SignUpUser.dto';
 import { LoginUserDto } from './dtos/LoginUser.dto';
@@ -6,7 +6,6 @@ import { LocalGuard } from './guards/local.guard';
 import { JwtGuard } from './guards/jwt.guard';
 import { Users } from '../users/schemas/users.schema';
 import mongoose, { AnyObject } from 'mongoose';
-import { SignupInterceptor } from './interceptors/signup.interceptor';
 
 
 
@@ -27,7 +26,6 @@ export class AuthController {
     
     @Post('/signup')
     @UsePipes(ValidationPipe)
-    @UseInterceptors(SignupInterceptor)
     private async Signup(@Body() signupUser: SignUpUserDto):Promise<Users>{
         return this.AuthService.signup(signupUser)
 

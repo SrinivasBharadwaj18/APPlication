@@ -13,7 +13,7 @@ export class UpdateInterceptor implements NestInterceptor{
         request.body.emailid = emailid || undefined;
         request.body.firstname = firstname || undefined;
         request.body.lastname = lastname || undefined;
-        request.body.age = +age || undefined;
+        request.body.age = age || undefined;
         
         return next.handle()
     }

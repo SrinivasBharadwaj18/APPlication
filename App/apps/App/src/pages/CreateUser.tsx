@@ -3,14 +3,15 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useAppDispatch } from "../hooks";
 import { setSnack } from "../features/token/snackSlice";
-import { FormControl, Input, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import {CreatUserForm} from '../helpers/types'
-import AAPIService from "../services/aapi.service";
+import APIService from "../services/api.service";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import React from "react";
+import calculateAge from "../helpers/ageCalculator";
 
 export default function SignUp(props: { messageText: string; RoleName: string; title: string }) {
   const [upstate, setUpState] = useState<CreatUserForm>({
@@ -19,9 +20,8 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
     firstname: "",
     lastname: "",
     emailid: "",
-    age: ""
   });
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-17'));
+  const [value, setValue] = React.useState<Dayjs| null>(dayjs('2022-04-17'));
   const [role, setRole] = useState<string>(props.RoleName);
   const dispatch = useAppDispatch();
 
@@ -48,8 +48,10 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
 
   function handleClick(event: { preventDefault: () => void; }): void {
     event.preventDefault();
-    const apiService:AAPIService = new AAPIService()
-    apiService.post(`auth/signup`,{ username: upstate.username, firstname: upstate.firstname, lastname: upstate.lastname, emailid: upstate.emailid, role: role, password: upstate.password, age: upstate.age})
+    const age = value? calculateAge(value.toString()) :null
+    console.log(age)
+    const apiService:APIService = new APIService()
+    apiService.post(`auth/signup`,{ username: upstate.username, firstname: upstate.firstname, lastname: upstate.lastname, emailid: upstate.emailid, role: role, password: upstate.password, age: age})
       .then(() => {
         dispatch(setSnack({ message: `${props.messageText} Successful`, severity: "success" }));
       })
@@ -69,16 +71,11 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
             {fieldNames.map((field, index) => (
               <TextField required style={{ display: "block" }} key={index} name={field.name} placeholder={field.name} value={field.value} margin="dense" onChange={handleChange}/>
             ))}
-
-            <Input type= "date" aria-label="Demo input" placeholder="age" name="age" value={upstate.age} onChange={handleChange}/>
+            {/*  */}
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-          label="Controlled picker"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-        />
-
+            <DatePicker label="Date of Birth" value={value} onChange={(newValue) => setValue(newValue)}/>
             </LocalizationProvider>
+            {/*  */}
 
             <FormControl sx={{ m: 1, minWidth: 200 }}>
 
