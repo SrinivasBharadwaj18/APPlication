@@ -39,7 +39,8 @@ export class UtilsController {
         if(!file) throw new HttpException("no file submitted",400)
         return "we have the file"
     }
-
+    
+    @UseGuards(JwtGuard)
     @Post('/bot')
     async Bot(@Body() input:BotDto){
         const botMessage = await this.utilService.getBotMessage(input)

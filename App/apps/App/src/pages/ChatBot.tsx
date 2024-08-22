@@ -12,6 +12,7 @@ function ChatBot() {
   const [messageArr,setMessageArr] = useState<ChatType[]>([])
   const [inputText,setInputText]= useState<string>("")
   const id = useAppSelector((state)=>state.user.userid)
+  const token = useAppSelector((state)=> state.user.token)
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const apiService = new APIService()
 
@@ -28,7 +29,10 @@ function ChatBot() {
     if (inputText !== ""){
         const userTime = new Date().toLocaleString();
         setMessageArr((prev:ChatType[]) => [...prev, { type: 'user', message: inputText , time: userTime}]);
-        apiService.post(`utils/bot`,{source:'user', message:inputText, timestamp: userTime, id: id})
+        apiService.post(`utils/bot`,{source:'user', message:inputText, timestamp: userTime, id: id},{  headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }})
         .then((res:AxiosResponse)=>{
             const output = res.data
             setMessageArr((prev:ChatType[]) => [...prev, {type:'bot',message:output, time: botTime}]);
