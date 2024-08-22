@@ -18,7 +18,7 @@ export class UsersController {
         return await this.usersService.getAllUsers()
     }
     
-    
+    @UseGuards(JwtGuard)
     @Get(':id')
     private async GetUserById(@Param('id') id: string): Promise<Users> {
       const user = await this.usersService.getUserById(id)

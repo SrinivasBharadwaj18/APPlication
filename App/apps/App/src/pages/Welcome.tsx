@@ -9,7 +9,6 @@ import { buttonStyle } from "../styles/syles"
 import APIService from "../services/api.service"
 
 
-const Base = import.meta.env.VITE_BASE_URL
 export function Welcome(){
 
     const [restricted, setRestricted] = useState<boolean>(false)
@@ -25,7 +24,7 @@ export function Welcome(){
 
 
     useEffect(()=>{
-        apiService.get(`${Base}users/${userId}`,{  headers: {
+        apiService.get(`users/${userId}`,{  headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }}
@@ -48,7 +47,7 @@ export function Welcome(){
     const [users, setUsers] = useState([])
 
     async function handleClick(){
-        apiService.get(`${Base}users`,{  headers: {
+        apiService.get(`users`,{  headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }}
