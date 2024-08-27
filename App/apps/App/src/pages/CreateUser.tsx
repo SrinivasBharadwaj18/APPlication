@@ -71,17 +71,16 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
             {fieldNames.map((field, index) => (
               <TextField required style={{ display: "block" }} key={index} name={field.name} placeholder={field.name} value={field.value} margin="dense" onChange={handleChange}/>
             ))}
+              <div style={{marginBottom:"5px"}}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker sx={{width:"8rem"}} label="Date of Birth" value={value} onChange={(newValue) => setValue(newValue)}/>
             </LocalizationProvider>
+              </div>
             <FormControl sx={{ m: 1, minWidth: 200 }}>
-
               <InputLabel id="demo-simple-select-autowidth-label">Role</InputLabel>
-
               <Select sx={{width:'8rem'}} labelId="demo-simple-select-autowidth-label" id="demo-simple-select-autowidth" name="role" value={role} onChange={handleChange} label="Role">
                 <MenuItem  value={props.RoleName}>{props.RoleName}</MenuItem>
               </Select>
-
             </FormControl>
             <br />
             <br />
