@@ -6,8 +6,7 @@ import APIService from "../services/api.service";
 
 
 export default function FileUploadpage(){
-    const BASE_URL = import.meta.env.VITE_BASE_URL
-    const URL = `${BASE_URL}utils/upload` 
+    const URL = `utils/upload` 
     const [file, setFile] = useState<File | null>(null);
     const dispatch = useAppDispatch();
     const apiService = new APIService()

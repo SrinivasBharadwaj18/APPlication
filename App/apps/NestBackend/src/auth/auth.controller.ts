@@ -12,7 +12,7 @@ import mongoose, { AnyObject } from 'mongoose';
 @Controller('auth')
 export class AuthController {
     constructor(
-        private AuthService : AuthService
+        private authService : AuthService
     ){}
 
     @UseGuards(JwtGuard)
@@ -20,14 +20,14 @@ export class AuthController {
     private async GetUsers():Promise<(mongoose.Document<unknown, AnyObject, Users> & Users & {
         _id: mongoose.Types.ObjectId;
     })[]>{
-        return this.AuthService.getAllUsers()
+        return this.authService.getAllUsers()
 
     }
     
     @Post('/signup')
     @UsePipes(ValidationPipe)
     private async Signup(@Body() signupUser: SignUpUserDto):Promise<Users>{
-        return this.AuthService.signup(signupUser)
+        return this.authService.signup(signupUser)
 
     }
     
@@ -35,10 +35,10 @@ export class AuthController {
     @Post('/login')
     @UsePipes(ValidationPipe)
     private async Login(@Body() LoginUser: LoginUserDto): Promise<{Token:string, userId:mongoose.Types.ObjectId}>{
-        const token = await this.AuthService.login(LoginUser)
+        const token = await this.authService.login(LoginUser)
         const Token = token.token
         const { username } = LoginUser
-        const user = await this.AuthService.findOne(username)
+        const user = await this.authService.findOne(username)
         if (!user){
             throw new UnauthorizedException("invalid credentials")
         }
