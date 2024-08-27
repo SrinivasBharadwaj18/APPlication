@@ -81,7 +81,9 @@ export default function UpdateUser(){
           <h1 style={{paddingBottom: "10px"}}>update User</h1>
           <form action="" onSubmit={handleClick}>
               {fieldNames.map((field ,index) => (
-                  <TextField style={{display: "block"}} key={index} name={field.name} placeholder={field.name} value={field.value} id="margin-dense" margin="dense" onChange={handleChange}/>
+                <div className="field-item">
+                  <TextField label={field.name}  key={index} name={field.name} placeholder={field.name} value={field.value} onChange={handleChange}/>
+                </div>
               ))}
               <Input type = "number" aria-label="Demo input" placeholder="age" name="age" value={form.age}  onChange={handleChange} />
               <br />

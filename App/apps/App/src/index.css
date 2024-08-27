@@ -96,3 +96,8 @@ table ,th, td {
 .landing{
   text-align: center;
 }
+
+.field-item{
+  display: block;
+  margin-bottom: 1rem;
+}
