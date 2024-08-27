@@ -26,6 +26,16 @@ body{
   margin-top: 10%;
 }
 
+.create-user-form{
+  background-color: white;
+  margin: 0 auto;
+  width: 40%;
+  height : 45rem;
+  text-align: center;
+  padding: 100px;
+  margin: 60px auto
+}
+
 .Page h1 {
   color: Blue;
   text-align: center;

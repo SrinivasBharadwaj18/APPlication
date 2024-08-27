@@ -62,7 +62,7 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
 
   return (
     <div className="Page">
-      <div className="card">
+      <div className="create-user-form">
         <header>
           <h1 style={{overflow:'-moz-hidden-unscrollable'}}>{props.title}</h1>
         </header>
@@ -72,13 +72,13 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
               <TextField required style={{ display: "block" }} key={index} name={field.name} placeholder={field.name} value={field.value} margin="dense" onChange={handleChange}/>
             ))}
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker label="Date of Birth" value={value} onChange={(newValue) => setValue(newValue)}/>
+            <DatePicker sx={{width:"8rem"}} label="Date of Birth" value={value} onChange={(newValue) => setValue(newValue)}/>
             </LocalizationProvider>
             <FormControl sx={{ m: 1, minWidth: 200 }}>
 
               <InputLabel id="demo-simple-select-autowidth-label">Role</InputLabel>
 
-              <Select sx={{width:'150px'}} labelId="demo-simple-select-autowidth-label" id="demo-simple-select-autowidth" name="role" value={role} onChange={handleChange} label="Role">
+              <Select sx={{width:'8rem'}} labelId="demo-simple-select-autowidth-label" id="demo-simple-select-autowidth" name="role" value={role} onChange={handleChange} label="Role">
                 <MenuItem  value={props.RoleName}>{props.RoleName}</MenuItem>
               </Select>
 
