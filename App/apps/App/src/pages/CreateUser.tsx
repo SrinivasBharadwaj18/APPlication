@@ -64,21 +64,21 @@ export default function SignUp(props: { messageText: string; RoleName: string; t
     <div className="Page">
       <div className="create-user-form">
         <header>
-          <h1 style={{overflow:'-moz-hidden-unscrollable'}}>{props.title}</h1>
+          <h1>{props.title}</h1>
         </header>
         <div>
           <form onSubmit={handleClick}>
             {fieldNames.map((field, index) => (
               <TextField required style={{ display: "block" }} key={index} name={field.name} placeholder={field.name} value={field.value} margin="dense" onChange={handleChange}/>
             ))}
-              <div style={{marginBottom:"5px"}}>
+              <div style={{margin:"10px 0"}}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker sx={{width:"8rem"}} label="Date of Birth" value={value} onChange={(newValue) => setValue(newValue)}/>
+            <DatePicker sx={{width:"100%", maxWidth:"14.5rem"}} label="Date of Birth" value={value} onChange={(newValue) => setValue(newValue)}/>
             </LocalizationProvider>
               </div>
-            <FormControl sx={{ m: 1, minWidth: 200 }}>
+            <FormControl>
               <InputLabel id="demo-simple-select-autowidth-label">Role</InputLabel>
-              <Select sx={{width:'8rem'}} labelId="demo-simple-select-autowidth-label" id="demo-simple-select-autowidth" name="role" value={role} onChange={handleChange} label="Role">
+              <Select sx={{width:'100%', maxWidth:"14.5rem"}}  name="role" value={role} onChange={handleChange} label="Role">
                 <MenuItem  value={props.RoleName}>{props.RoleName}</MenuItem>
               </Select>
             </FormControl>
